@@ -8,3 +8,9 @@
   mask-size: 100% 100%;
   background-color: currentColor;
 }
+
+.icon-menu {
+  $src: 'https://api.iconify.design/ep/menu.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
