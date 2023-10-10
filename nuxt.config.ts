@@ -4,7 +4,12 @@ export default {
   css: [
     '~/assets/style/basic.scss'
   ],
+  runtimeConfig: {
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_KEY: process.env.SUPABASE_KEY
+  },
   modules: [
+    '@nuxtjs/supabase',
     '@nuxtjs/tailwindcss',
     [
       '@pinia/nuxt',

@@ -25,10 +25,20 @@
         </li>
       </NuxtLink>
     </ul>
-    <button class="flex items-center justify-center gap-4 | mt-auto py-3 | text-sm text-center | border-t hover:bg-black hover:text-white">
+    <button class="flex items-center justify-center gap-4 | mt-auto py-3 | text-sm text-center | border-t hover:bg-black hover:text-white"
+            @click="signOut">
       <span>Sign out</span>
     </button>
   </nav>
 </template>
 <script setup lang="ts">
+const {auth} = useSupabaseClient()
+
+const signOut = async () => {
+  const {error} = await auth.signOut()
+  if (error) alert(error.message)
+  navigateTo('/login')
+}
+
+
 </script>
