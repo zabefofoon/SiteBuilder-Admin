@@ -14,3 +14,27 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-delete {
+  $src: 'https://api.iconify.design/material-symbols/delete-outline.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-go {
+  $src: 'https://api.iconify.design/ic/outline-content-paste-go.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-up {
+  $src: 'https://api.iconify.design/carbon/arrow-up.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-down {
+  $src: 'https://api.iconify.design/carbon/arrow-down.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}

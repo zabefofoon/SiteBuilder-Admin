@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="default">
-    Pages
+    id
   </NuxtLayout>
 </template>
 
@@ -8,4 +8,6 @@
 
 </script>
 
+<style scoped>
 
+</style>

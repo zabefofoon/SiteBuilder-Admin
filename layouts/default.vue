@@ -4,7 +4,7 @@
       <NuxtLink to="/">SiteBuilder</NuxtLink>
     </header>
     <div class="h-full | bg-zinc-100 | p-4">
-      <div class="h-full | bg-white border | p-2">
+      <div class="h-full | bg-white border">
         <slot/>
       </div>
     </div>
