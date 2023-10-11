@@ -50,7 +50,7 @@
                       :disabled="page.lock"
                       class="flex px-2 py-1 | rounded-full border"
                       :class="page[key] ? 'bg-black text-white' : ''"
-                      @click.stop="toggleValue(index, key)">
+                      @click.stop="toggleValue(page, index, key, !page[key])">
                 <span v-if="page[key]">On</span>
                 <span v-else>Off</span>
               </button>
@@ -58,7 +58,7 @@
                 <input v-if="!page.lock"
                        class="w-full | p-1 | bg-transparent | border-b border-dashed"
                        :value="page[key]"
-                       @input="setPageField(index, key, $event.target.value)"
+                       @change="setPageField(page, index, key, $event.target.value)"
                        @click.stop/>
                 <span v-else>{{ page[key] }}</span>
               </template>
@@ -91,21 +91,67 @@ const getEditablePageValues = (page: PageBrief) => Object
     .keys(page)
     .filter((key) => !['lock', 'id'].includes(key))
 
-const toggleValue = (index: number,
-                     field: string) => {
+const toggleValue = async (page: PageBrief,
+                           index: number,
+                           field: string,
+                           value: boolean) => {
   if (!['authorized', 'dynamic', 'lock', 'activate'].includes(field)) return
 
   const _field = <'authorized' | 'dynamic' | 'lock' | 'activate'>field
+  const url = _field === 'dynamic' && page.url
+      ? value
+          ? page.url.endsWith('/')
+              ? page.url + ':id'
+              : page.url + '/:id'
+          : page.url.includes('/:id')
+              ? page.url.replace('/:id', '')
+              : page.url.replace(':id', '')
+      : page.url
+
+  const {error} = await supabaseClient
+      .from('pages')
+      .update({
+        [_field]: value,
+        url
+      })
+      .eq('id', page.id)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  pages.value[index].url = url
   pages.value[index][_field] = !pages.value[index][_field]
 }
 
-const setPageField = (index: number,
-                      field: string,
-                      value: string) => {
+const setPageField = async (page: PageBrief,
+                            index: number,
+                            field: string,
+                            value: string) => {
   if (!['name', 'url'].includes(field)) return
 
   const _field = <'name' | 'url'>field
+
+  const dynamic = _field === 'url' && page.url
+      ? value.includes('/:id')
+      : page.dynamic
+
+  const {error} = await supabaseClient
+      .from('pages')
+      .update({
+        [_field]: value,
+        dynamic
+      })
+      .eq('id', page.id)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
   pages.value[index][_field] = value
+  pages.value[index].dynamic = dynamic
 }
 
 const loadPages = async () => {
