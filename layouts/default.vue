@@ -4,9 +4,7 @@
       <NuxtLink to="/">SiteBuilder</NuxtLink>
     </header>
     <div class="h-full | bg-zinc-100 | p-4">
-      <div class="h-full | bg-white border">
-        <slot/>
-      </div>
+      <slot/>
     </div>
     <footer class="flex items-center | px-4 | h-8 | border text-xs">v0.0.0</footer>
     <Aside/>

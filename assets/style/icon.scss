@@ -38,3 +38,27 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-seo {
+  $src: 'https://api.iconify.design/tabler/seo.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-config {
+  $src: 'https://api.iconify.design/eos-icons/configuration-file-outlined.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-draw {
+  $src: 'https://api.iconify.design/fluent/draw-shape-20-regular.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-chevron-right {
+  $src: 'https://api.iconify.design/system-uicons/chevron-right.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}

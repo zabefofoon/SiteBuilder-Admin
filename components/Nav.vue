@@ -6,19 +6,19 @@
       </div>
     </NuxtLink>
     <ul>
-      <NuxtLink to="pages">
+      <NuxtLink to="/pages">
         <li class="hover:bg-black hover:text-white"
             :class="$route.path.includes('/pages') ? 'bg-gray-100' : ''">
           <button class="w-full | border-b | px-4 py-2 | text-sm text-left">Pages</button>
         </li>
       </NuxtLink>
-      <NuxtLink to="corners">
+      <NuxtLink to="/corners">
         <li class="hover:bg-black hover:text-white"
             :class="$route.path.includes('/corners') ? 'bg-gray-100' : ''">
           <button class="w-full | border-b | px-4 py-2 | text-sm text-left">Corners</button>
         </li>
       </NuxtLink>
-      <NuxtLink to="messages">
+      <NuxtLink to="/messages">
         <li class="hover:bg-black hover:text-white"
             :class="$route.path.includes('/messages') ? 'bg-gray-100' : ''">
           <button class="w-full | border-b | px-4 py-2 | text-sm text-left">Messages</button>
