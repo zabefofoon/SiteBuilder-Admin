@@ -78,9 +78,9 @@
 </template>
 
 <script setup lang="ts">
-import type {PageBrief} from "~/model/PageBrief"
+import type {PageBrief} from "~/models/PageBrief"
 import {onMounted} from "#imports"
-import {Database} from "~/model/Database"
+import {Database} from "~/models/Database"
 
 const supabaseClient = useSupabaseClient<Database>()
 

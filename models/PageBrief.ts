@@ -17,3 +17,8 @@ export type Page = {
   lock: boolean | null
   activate: boolean | null
 }
+
+export type Node = {
+  id: string
+  children: Node[]
+}

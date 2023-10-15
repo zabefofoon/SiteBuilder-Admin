@@ -4,20 +4,20 @@
       <div class="flex flex-col gap-2">
         <button class="w-fit | p-2 | flex | rounded-lg | hover:text-white | hover:bg-black | border"
                 title="Config page"
-                :class="selectedTab === 'config' ? 'bg-black text-white' : 'bg-white text-black'"
-                @click="selectTab('config')">
+                :class="isConfig ? 'bg-black text-white' : 'bg-white text-black'"
+                @click="router.push({query: {selectedTab: 'config'}});">
           <i class="icon icon-config | text-2xl"></i>
         </button>
         <button class="w-fit | p-2 | flex | rounded-lg | hover:text-white | hover:bg-black | border"
                 title="Draw page"
-                :class="selectedTab === 'editor' ? 'bg-black text-white' : 'bg-white text-black'"
-                @click="selectTab('editor')">
+                :class="isEditor ? 'bg-black text-white' : 'bg-white text-black'"
+                @click="router.push({query: {selectedTab: 'editor'}});">
           <i class="icon icon-draw | text-2xl"></i>
         </button>
       </div>
-      <ConfigPage v-if="page && selectedTab === 'config'"
+      <ConfigPage v-if="page && isConfig"
                   :page="page"/>
-      <Editor v-if="page && selectedTab === 'editor'"
+      <Editor v-if="page && isEditor"
               :page="page"/>
     </div>
   </NuxtLayout>
@@ -26,21 +26,35 @@
 <script setup lang="ts">
 import Editor from "~/components/Editor.vue"
 import ConfigPage from "~/components/ConfigPage.vue"
-import {Page} from "~/model/PageBrief"
-import {Database} from "~/model/Database"
-import {useRoute} from "#imports"
+import {Page} from "~/models/PageBrief"
+import {Database} from "~/models/Database"
+import {computed, useRoute, useRouter} from "#imports"
 
 const route = useRoute()
+const router = useRouter()
 
-const selectedTab = ref<'config' | 'editor'>('config')
-const selectTab = (value: 'config' | 'editor') => selectedTab.value = value
 
 const page = ref<Page>()
 
 const supabaseClient = useSupabaseClient<Database>()
 
+const isConfig = computed(() => route.query.selectedTab === 'config'
+    || !route.query.selectedTab)
+
+const isEditor = computed(() => route.query.selectedTab === 'editor')
+
 const loadPage = async () => {
-  const {data, error} = await supabaseClient
+  page.value = {
+    id: 0,
+    name: 'name',
+    url: '/',
+    authorized: false,
+    dynamic: false,
+    lock: false,
+    activate: false
+  }
+
+  /*const {data, error} = await supabaseClient
       .from('pages')
       .select('*')
       .eq('id', Number(route.params.id))
@@ -49,7 +63,7 @@ const loadPage = async () => {
 
   if (error) console.error(error)
 
-  if (data) page.value = data
+  if (data) page.value = data*/
 }
 
 loadPage()

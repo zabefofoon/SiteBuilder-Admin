@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import {Page} from "~/model/PageBrief"
+import {Page} from "~/models/PageBrief"
 
 const props = defineProps<{
   page: Page
