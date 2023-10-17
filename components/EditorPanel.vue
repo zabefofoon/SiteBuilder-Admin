@@ -1,7 +1,24 @@
 <template>
   <div class="w-80 | bg-white | border">
-    <button @click="editorStore.addNodeSiblingDownToChild()">addDown</button>
-    <button @click="editorStore.addNodeSiblingUpToChild()">addUp</button>
+    <div class="flex flex-col">
+      <button class="text-left"
+              @click="editorStore.addNodeSiblingDownToChild()">
+        addDown
+      </button>
+      <button class="text-left"
+              @click="editorStore.addNodeSiblingUpToChild()">
+        addUp
+      </button>
+      <button class="text-left"
+              @click="editorStore.addNodeChildToChild()">
+        addChild
+      </button>
+      <button class="text-left"
+              @click="editorStore.addNodeParentToChild()">
+        addParent
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -11,6 +28,6 @@ import {useEditorStore} from "~/stores/editor/editor.store"
 const editorStore = useEditorStore()
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

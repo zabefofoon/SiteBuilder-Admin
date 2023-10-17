@@ -1,6 +1,6 @@
 import {useEditorStore} from "~/stores/editor/editor.store"
 import {ActionManager} from "~/models/ActionManager"
-import {AddNodeSiblingDown, AddNodeSiblingUp} from "~/models/Action"
+import {AddNodeChild, AddNodeParent, AddNodeSiblingDown, AddNodeSiblingUp} from "~/models/Action"
 
 export const actionMixin = () => {
   const editorStore = useEditorStore()
@@ -28,14 +28,21 @@ export const actionMixin = () => {
   const addNodeSiblingDownToChild = () => actionManager.value?.execute(AddNodeSiblingDown.of())
   const addNodeSiblingUpToChild = () => actionManager.value?.execute(AddNodeSiblingUp.of())
 
+  const addNodeChildToChild = () => actionManager.value?.execute(AddNodeChild.of())
+
+  const addNodeParentToChild = () => actionManager.value?.execute(AddNodeParent.of())
   return {
     actionManager,
     initActionManager,
 
     selectNodeIdOneToParent,
     selectNodeIdManyToParent,
+
     addNodeSiblingDownToChild,
     addNodeSiblingUpToChild,
+    addNodeChildToChild,
+    addNodeParentToChild,
+
     emptySelectedNodeIdsToParent
   }
 }

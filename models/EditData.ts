@@ -6,6 +6,7 @@ export type EditDataRaw = {
 }
 
 export class EditData {
+  id = undefined
   nodes: Node[] = []
   selectedNodeIds: string[] = []
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-dashed"
+  <div class="border border-dashed | p-1"
        :class="editorStore.editData?.selectedNodeIds.includes(node.id) ? 'border-orange-500' : ''"
        @click.stop="clickHandler">
     <div v-if="!node.nodes.length">{{ node.id }}</div>
@@ -10,11 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import {Node} from '~/models/Node'
+import {Node as NodeClass} from '~/models/Node'
 import {useEditorStore} from "~/stores/editor/editor.store"
 
 const props = defineProps<{
-  node: Node
+  node: NodeClass
 }>()
 
 const editorStore = useEditorStore()

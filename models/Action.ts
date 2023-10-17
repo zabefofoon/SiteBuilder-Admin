@@ -74,8 +74,8 @@ export class AddNodeSiblingDown extends AbstractAction {
         })
 
 
+    editorStore.emptySelectedNodeIdsToParent()
     this.createdNodeIds.forEach((nodeId) => {
-      editorStore.emptySelectedNodeIdsToParent()
       editorStore.selectNodeIdManyToParent(nodeId)
     })
   }
@@ -92,6 +92,8 @@ export class AddNodeSiblingDown extends AbstractAction {
                 : editorStore.editData?.removeNode(createdNodeId)
           })
     })
+
+    editorStore.emptySelectedNodeIdsToParent()
   }
 
   redo() {
@@ -156,8 +158,8 @@ export class AddNodeSiblingUp extends AbstractAction {
         })
 
 
+    editorStore.emptySelectedNodeIdsToParent()
     this.createdNodeIds.forEach((nodeId) => {
-      editorStore.emptySelectedNodeIdsToParent()
       editorStore.selectNodeIdManyToParent(nodeId)
     })
   }
@@ -174,6 +176,8 @@ export class AddNodeSiblingUp extends AbstractAction {
                 : editorStore.editData?.removeNode(createdNodeId)
           })
     })
+
+    editorStore.emptySelectedNodeIdsToParent()
   }
 
   redo() {
@@ -182,5 +186,128 @@ export class AddNodeSiblingUp extends AbstractAction {
 
   static of() {
     return new AddNodeSiblingUp()
+  }
+}
+
+export class AddNodeChild extends AbstractAction {
+  createdNodeIds: string[] = []
+
+  constructor() {
+    super()
+  }
+
+  do(): void {
+    const editorStore = useEditorStore()
+
+    editorStore.toChild(() => {
+      if (editorStore.editData?.selectedNodeIds.length === 0) {
+        const node = Node.of()
+        this.createdNodeIds.push(node.id)
+        editorStore.editData?.nodes.push(node)
+      } else {
+        editorStore.editData?.selectedNodeIds.forEach((nodeId) => {
+          const node = Node.of(nodeId)
+          this.createdNodeIds.push(node.id)
+
+          const found = editorStore.editData?.findNode(nodeId)
+          found?.nodes.push(node)
+        })
+      }
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.createdNodeIds.forEach((nodeId) => {
+      editorStore.selectNodeIdManyToParent(nodeId)
+    })
+  }
+
+  undo(): void {
+    const editorStore = useEditorStore()
+    editorStore.toChild(() => {
+      this.createdNodeIds
+          .forEach((createdNodeId) => {
+            const found = editorStore.editData?.findNode(createdNodeId)
+            found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)?.removeNode(createdNodeId)
+                : editorStore.editData?.removeNode(createdNodeId)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+  }
+
+  redo(): void {
+    this.do()
+  }
+
+  static of() {
+    return new AddNodeChild()
+  }
+}
+
+export class AddNodeParent extends AbstractAction {
+  createdNodeIds: string[] = []
+
+  constructor() {
+    super()
+  }
+
+  do(): void {
+    const editorStore = useEditorStore()
+
+    editorStore.toChild(() => {
+      if (editorStore.editData?.selectedNodeIds.length === 0) {
+        const node = Node.of()
+        this.createdNodeIds.push(node.id)
+        editorStore.editData?.nodes.push(node)
+      } else {
+        editorStore.editData?.selectedNodeIds.forEach((nodeId) => {
+          const found = editorStore.editData?.findNode(nodeId)!
+          const parent = editorStore.editData?.findNode(found?.parentId || '')
+
+          const parentNode = parent
+              ? parent
+              : editorStore.editData
+
+          const node = Node.of(parentNode?.id)
+          this.createdNodeIds.push(node.id)
+
+          parentNode?.nodes.push(node)
+          found.parentId = node.id
+          node.nodes.push(Node.makeNode(found))
+
+          parentNode!.nodes = parentNode!.nodes.filter((node) => node.id !== nodeId)
+        })
+      }
+    })
+
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.createdNodeIds.forEach((nodeId) => {
+      editorStore.selectNodeIdManyToParent(nodeId)
+    })
+  }
+
+  undo(): void {
+    const editorStore = useEditorStore()
+    editorStore.toChild(() => {
+      this.createdNodeIds
+          .forEach((createdNodeId) => {
+            const found = editorStore.editData?.findNode(createdNodeId)
+            found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)?.removeNode(createdNodeId)
+                : editorStore.editData?.removeNode(createdNodeId)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+  }
+
+  redo(): void {
+    this.do()
+  }
+
+  static of() {
+    return new AddNodeParent()
   }
 }
