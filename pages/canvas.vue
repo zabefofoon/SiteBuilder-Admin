@@ -1,11 +1,11 @@
 <template>
-  {{ editorStore?.editData }}
   <div v-click-away="() => editorStore.emptySelectedNodeIdsToParent()">
     <Node v-for="node in editorStore.editData?.nodes || []"
           :key="node.id"
           :node="node"/>
   </div>
-
+  <hr/>
+  <span class="text-xs">{{ editorStore?.editData }}</span>
 </template>
 
 <script setup lang="ts">

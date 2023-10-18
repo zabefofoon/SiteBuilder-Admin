@@ -2,7 +2,10 @@
   <div class="border border-dashed | p-1"
        :class="editorStore.editData?.selectedNodeIds.includes(node.id) ? 'border-orange-500' : ''"
        @click.stop="clickHandler">
-    <div v-if="!node.nodes.length">{{ node.id }}</div>
+    <div class="text-xs">
+      id: {{ node.id }}<br/>
+      parent: {{ node.parentId }}<br/>
+    </div>
     <Node v-for="node in node.nodes"
           :key="node.id"
           :node="node"/>
