@@ -21,10 +21,16 @@ export class AbstractAction implements Action {
   }
 }
 
+export type DeletedNode = {
+  index?: number
+  node?: Node
+}
+
 export class AddNodeSiblingDown extends AbstractAction {
 
   private createdNodeIds: string[] = []
   private selectedNodeIds: string[] = []
+  private deletedNodes: DeletedNode[] = []
 
   constructor() {
     super()
@@ -54,42 +60,39 @@ export class AddNodeSiblingDown extends AbstractAction {
     this.selectedNodeIds.length === 0
         ? editorStore.toChild(() => this.createNodeOne())
         : editorStore.toChild(() => {
-          const isSameParent = this.selectedNodeIds
+          this.selectedNodeIds
               .map((nodeId) => editorStore.editData?.findNode(nodeId))
-              .every((node, index, array) => {
-                return node?.parentId === array[0]?.parentId
+              .forEach((selectedNode) => {
+                const node = Node.of(selectedNode?.parentId)
+                this.createdNodeIds.push(node.id)
+                const parent = editorStore.editData?.findNode(selectedNode?.parentId || '') || editorStore.editData
+                const index = parent!.nodes.findIndex((child) => child.id === selectedNode?.id)
+                parent?.nodes.splice(index + 1, 0, node)
               })
-
-          isSameParent
-              ? this.createNodeOne()
-              : this.selectedNodeIds
-                  .map((nodeId) => editorStore.editData?.findNode(nodeId))
-                  .forEach((selectedNode) => {
-                    const node = Node.of()
-                    this.createdNodeIds.push(node.id)
-                    const parent = editorStore.editData?.findNode(selectedNode?.parentId || '') || editorStore.editData
-                    const index = parent?.nodes.findIndex((node) => node.id === selectedNode?.id) || -1
-                    parent?.nodes.splice(index + 1, 0, node)
-                  })
         })
 
 
     editorStore.emptySelectedNodeIdsToParent()
-    this.createdNodeIds.forEach((nodeId) => {
-      editorStore.selectNodeIdManyToParent(nodeId)
-    })
+    this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
   undo() {
     const editorStore = useEditorStore()
 
+    this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
           .forEach((createdNodeId) => {
             const found = editorStore.editData?.findNode(createdNodeId)
-            found?.parentId
-                ? editorStore.editData?.findNode(found.parentId)?.removeNode(createdNodeId)
-                : editorStore.editData?.removeNode(createdNodeId)
+
+            const parentNode = found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)
+                : editorStore.editData
+
+            const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
+            this.deletedNodes.push({index, node: found})
+
+            parentNode?.removeNode(createdNodeId)
           })
     })
 
@@ -97,7 +100,25 @@ export class AddNodeSiblingDown extends AbstractAction {
   }
 
   redo() {
-    this.do()
+    const editorStore = useEditorStore()
+    editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
+
+    this.selectedNodeIds.length === 0
+        ? editorStore.toChild(() => this.createNodeOne())
+        : editorStore.toChild(() => {
+          this.deletedNodes.slice().reverse().forEach((deletedNode) => {
+            const parent = deletedNode.node?.parentId
+                ? editorStore.editData?.findNode(deletedNode.node?.parentId)
+                : editorStore.editData
+
+            if (deletedNode.node)
+              parent?.nodes.splice(deletedNode.index || 0, 0, deletedNode.node)
+          })
+        })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
   static of() {
@@ -109,7 +130,7 @@ export class AddNodeSiblingUp extends AbstractAction {
 
   private createdNodeIds: string[] = []
   private selectedNodeIds: string[] = []
-
+  private deletedNodes: DeletedNode[] = []
   constructor() {
     super()
   }
@@ -138,23 +159,15 @@ export class AddNodeSiblingUp extends AbstractAction {
     this.selectedNodeIds.length === 0
         ? editorStore.toChild(() => this.createNodeOne())
         : editorStore.toChild(() => {
-          const isSameParent = this.selectedNodeIds
+          this.selectedNodeIds
               .map((nodeId) => editorStore.editData?.findNode(nodeId))
-              .every((node, index, array) => {
-                return node?.parentId === array[0]?.parentId
+              .forEach((selectedNode) => {
+                const node = Node.of(selectedNode?.parentId)
+                this.createdNodeIds.push(node.id)
+                const parent = editorStore.editData?.findNode(selectedNode?.parentId || '') || editorStore.editData
+                const index = parent?.nodes.findIndex((node) => node.id === selectedNode?.id)
+                parent?.nodes.splice(index!, 0, node)
               })
-
-          isSameParent
-              ? this.createNodeOne()
-              : this.selectedNodeIds
-                  .map((nodeId) => editorStore.editData?.findNode(nodeId))
-                  .forEach((selectedNode) => {
-                    const node = Node.of()
-                    this.createdNodeIds.push(node.id)
-                    const parent = editorStore.editData?.findNode(selectedNode?.parentId || '') || editorStore.editData
-                    const index = parent?.nodes.findIndex((node) => node.id === selectedNode?.id) || -1
-                    parent?.nodes.splice(index, 0, node)
-                  })
         })
 
 
@@ -167,13 +180,20 @@ export class AddNodeSiblingUp extends AbstractAction {
   undo() {
     const editorStore = useEditorStore()
 
+    this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
           .forEach((createdNodeId) => {
             const found = editorStore.editData?.findNode(createdNodeId)
-            found?.parentId
-                ? editorStore.editData?.findNode(found.parentId)?.removeNode(createdNodeId)
-                : editorStore.editData?.removeNode(createdNodeId)
+
+            const parentNode = found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)
+                : editorStore.editData
+
+            const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
+            this.deletedNodes.push({index, node: found})
+
+            parentNode?.removeNode(createdNodeId)
           })
     })
 
@@ -181,7 +201,25 @@ export class AddNodeSiblingUp extends AbstractAction {
   }
 
   redo() {
-    this.do()
+    const editorStore = useEditorStore()
+    editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
+
+    this.selectedNodeIds.length === 0
+        ? editorStore.toChild(() => this.createNodeOne())
+        : editorStore.toChild(() => {
+          this.deletedNodes.slice().reverse().forEach((deletedNode) => {
+            const parent = deletedNode.node?.parentId
+                ? editorStore.editData?.findNode(deletedNode.node?.parentId)
+                : editorStore.editData
+
+            if (deletedNode.node)
+              parent?.nodes.splice(deletedNode.index || 0, 0, deletedNode.node)
+          })
+        })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
   static of() {
