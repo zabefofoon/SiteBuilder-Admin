@@ -17,6 +17,18 @@
               @click="editorStore.addNodeParentToChild()">
         addParent
       </button>
+      <button class="text-left"
+              @click="editorStore.copy()">
+        copy
+      </button>
+      <button class="text-left"
+              @click="editorStore.cut()">
+        cut
+      </button>
+      <button class="text-left"
+              @click="editorStore.paste()">
+        paste
+      </button>
     </div>
 
   </div>

@@ -107,6 +107,17 @@ export class Node {
       this.layout[this.selectedResponsiveMode].bottom = value
   }
 
+  forEach(nodes: Node[], cb: (node: Node) => void) {
+    const recursive = (nodes: Node[]) => {
+      nodes.forEach((child) => {
+        cb(child)
+        recursive(child.nodes)
+      })
+    }
+
+    recursive(nodes)
+  }
+
   static makeNode(node: Node) {
     return Object.assign(new Node(), node)
   }

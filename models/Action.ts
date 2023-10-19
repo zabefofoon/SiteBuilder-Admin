@@ -74,7 +74,7 @@ export class AddNodeSiblingDown implements Action {
                 : editorStore.editData
 
             const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
-            this.deletedNodes.push({index, node: found})
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
 
             parentNode?.removeNode(createdNodeId)
           })
@@ -166,7 +166,7 @@ export class AddNodeSiblingUp implements Action {
                 : editorStore.editData
 
             const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
-            this.deletedNodes.push({index, node: found})
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
 
             parentNode?.removeNode(createdNodeId)
           })
@@ -246,7 +246,7 @@ export class AddNodeChild implements Action {
                 : editorStore.editData
 
             const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
-            this.deletedNodes.push({index, node: found})
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
 
             parentNode?.removeNode(createdNodeId)
           })
@@ -337,7 +337,7 @@ export class AddNodeParent implements Action {
                 : editorStore.editData
 
             const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
-            this.deletedNodes.push({index, node: found})
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
 
             parentNode?.removeNode(createdNodeId)
 
@@ -394,5 +394,162 @@ export class AddNodeParent implements Action {
 
   static of() {
     return new AddNodeParent()
+  }
+}
+
+export class Paste implements Action {
+  private createdNodeIds: string[] = []
+  private selectedNodeIds: string[] = []
+  private deletedNodes: DeletedNode[] = []
+
+  do(): void {
+    const editorStore = useEditorStore()
+    this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
+
+    this.selectedNodeIds.length === 0
+        ? editorStore.toChild(() => {
+          editorStore.copiedNodes
+              .forEach((copiedNode) => {
+                copiedNode.parentId = undefined
+                editorStore.editData?.nodes.push(copiedNode)
+                this.createdNodeIds.push(copiedNode.id)
+              })
+        })
+        : editorStore.toChild(() => {
+          this.selectedNodeIds
+              .map((nodeId) => editorStore.editData?.findNode(nodeId))
+              .forEach((selectedNode) => {
+                editorStore.copiedNodes
+                    .forEach((copiedNode) => {
+                      copiedNode.parentId = selectedNode?.id
+                      selectedNode?.nodes.push(copiedNode)
+                      this.createdNodeIds.push(copiedNode.id)
+                    })
+              })
+        })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
+  }
+
+  undo(): void {
+    const editorStore = useEditorStore()
+
+    this.deletedNodes = []
+    editorStore.toChild(() => {
+      this.createdNodeIds
+          .forEach((createdNodeId) => {
+            const found = editorStore.editData?.findNode(createdNodeId)
+
+            const parentNode = found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)
+                : editorStore.editData
+
+            const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
+
+            parentNode?.removeNode(createdNodeId)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+  }
+
+  redo() {
+    const editorStore = useEditorStore()
+    editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
+
+    editorStore.toChild(() => {
+      this.deletedNodes.slice().reverse().forEach((deletedNode) => {
+        const parent = deletedNode.node?.parentId
+            ? editorStore.editData?.findNode(deletedNode.node?.parentId)
+            : editorStore.editData
+
+        if (deletedNode.node)
+          parent?.nodes.splice(deletedNode.index || 0, 0, deletedNode.node)
+      })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
+  }
+
+  static of() {
+    return new Paste()
+  }
+}
+
+export class Cut implements Action {
+  private selectedNodeIds: string[] = []
+  private deletedNodes: DeletedNode[] = []
+  do(): void {
+    const editorStore = useEditorStore()
+    this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
+
+    this.deletedNodes = []
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          .forEach((selectedNodeId) => {
+            const found = editorStore.editData?.findNode(selectedNodeId)
+
+            const parentNode = found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)
+                : editorStore.editData
+
+            const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
+
+            parentNode?.removeNode(selectedNodeId)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+  }
+
+  undo(): void {
+    const editorStore = useEditorStore()
+
+    editorStore.toChild(() => {
+      this.deletedNodes
+          .slice()
+          .reverse()
+          .forEach((deletedNode) => {
+        const parent = deletedNode.node?.parentId
+            ? editorStore.editData?.findNode(deletedNode.node?.parentId)
+            : editorStore.editData
+
+        if (deletedNode.node)
+          parent?.nodes.splice(deletedNode.index || 0, 0, deletedNode.node)
+      })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+  }
+
+  redo(): void {
+    const editorStore = useEditorStore()
+    this.deletedNodes = []
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          .forEach((selectedNodeId) => {
+            const found = editorStore.editData?.findNode(selectedNodeId)
+
+            const parentNode = found?.parentId
+                ? editorStore.editData?.findNode(found.parentId)
+                : editorStore.editData
+
+            const index = parentNode?.nodes.findIndex((node) => node.id === found?.id)
+            this.deletedNodes.push({index, node: Node.makeNode(found)})
+
+            parentNode?.removeNode(selectedNodeId)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+  }
+
+  static of() {
+    return new Cut()
   }
 }
