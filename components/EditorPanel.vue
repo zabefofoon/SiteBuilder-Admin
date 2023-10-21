@@ -29,6 +29,14 @@
               @click="editorStore.paste()">
         paste
       </button>
+      <button class="text-left"
+              @click="editorStore.remove()">
+        remove
+      </button>
+      <button class="text-left"
+              @click="editorStore.removeParent()">
+        parent
+      </button>
     </div>
 
   </div>

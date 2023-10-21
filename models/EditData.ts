@@ -15,7 +15,7 @@ export class EditData {
     this.nodes = Node.makeNodes(editDataRaw?.nodes || [])
   }
 
-  findNode(nodeId: string): Node | undefined {
+  findNode(nodeId?: string): Node | undefined {
     let found
 
     const search = (nodes: Node[] = []) => {

@@ -1,6 +1,14 @@
 import {useEditorStore} from "~/stores/editor/editor.store"
 import {ActionManager} from "~/models/ActionManager"
-import {AddNodeChild, AddNodeParent, AddNodeSiblingDown, AddNodeSiblingUp, Cut, Paste} from "~/models/Action"
+import {
+  AddNodeChild,
+  AddNodeParent,
+  AddNodeSiblingDown,
+  AddNodeSiblingUp,
+  Paste,
+  Remove,
+  RemoveParent
+} from "~/models/Action"
 import {Node} from "~/models/Node"
 import {generateUniqueId} from "~/utils/util"
 
@@ -42,14 +50,17 @@ export const actionMixin = () => {
 
   const cut = () => {
     copy()
-    actionManager.value?.execute(Cut.of())
-    console.log('cut')
+    remove()
   }
 
   const paste = () => {
     copiedNodes.value = regenerateNodes(copiedNodes.value)
     actionManager.value?.execute(Paste.of())
   }
+
+  const remove = () => actionManager.value?.execute(Remove.of())
+
+  const removeParent = () => actionManager.value?.execute(RemoveParent.of())
 
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))
@@ -81,6 +92,9 @@ export const actionMixin = () => {
     copiedNodes,
     copy,
     cut,
-    paste
+    paste,
+
+    remove,
+    removeParent
   }
 }
