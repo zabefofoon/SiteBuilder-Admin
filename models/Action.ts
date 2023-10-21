@@ -1,12 +1,12 @@
-import {useEditorStore} from "~/stores/editor/editor.store"
+import type {EditorStore} from "~/stores/editor/editor.store"
 import {Node} from "~/models/Node"
 
 export interface Action {
-  do: () => void,
+  do: (editorStore: EditorStore) => void,
 
-  undo: () => void,
+  undo: (editorStore: EditorStore) => void,
 
-  redo: () => void,
+  redo: (editorStore: EditorStore) => void,
 }
 
 export type DeletedNode = {
@@ -20,8 +20,7 @@ export class AddNodeSiblingDown implements Action {
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
 
-  private createNodeOne = () => {
-    const editorStore = useEditorStore()
+  private createNodeOne = (editorStore: EditorStore) => {
     const node = Node.of()
     this.createdNodeIds.push(node.id)
 
@@ -37,12 +36,11 @@ export class AddNodeSiblingDown implements Action {
 
   }
 
-  do() {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore) {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     this.selectedNodeIds.length === 0
-        ? editorStore.toChild(() => this.createNodeOne())
+        ? editorStore.toChild(() => this.createNodeOne(editorStore))
         : editorStore.toChild(() => {
           this.selectedNodeIds
               .map((nodeId) => editorStore.editData?.findNode(nodeId))
@@ -60,9 +58,7 @@ export class AddNodeSiblingDown implements Action {
     this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  undo() {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore) {
     this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
@@ -83,8 +79,7 @@ export class AddNodeSiblingDown implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  redo() {
-    const editorStore = useEditorStore()
+  redo(editorStore: EditorStore) {
     editorStore.emptySelectedNodeIdsToParent()
     this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
 
@@ -112,8 +107,7 @@ export class AddNodeSiblingUp implements Action {
   private createdNodeIds: string[] = []
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
-  private createNodeOne = () => {
-    const editorStore = useEditorStore()
+  private createNodeOne = (editorStore: EditorStore) => {
     const node = Node.of()
     this.createdNodeIds.push(node.id)
 
@@ -129,12 +123,11 @@ export class AddNodeSiblingUp implements Action {
 
   }
 
-  do() {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore) {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     this.selectedNodeIds.length === 0
-        ? editorStore.toChild(() => this.createNodeOne())
+        ? editorStore.toChild(() => this.createNodeOne(editorStore))
         : editorStore.toChild(() => {
           this.selectedNodeIds
               .map((nodeId) => editorStore.editData?.findNode(nodeId))
@@ -152,9 +145,7 @@ export class AddNodeSiblingUp implements Action {
     this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  undo() {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore) {
     this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
@@ -175,8 +166,7 @@ export class AddNodeSiblingUp implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  redo() {
-    const editorStore = useEditorStore()
+  redo(editorStore: EditorStore) {
     editorStore.emptySelectedNodeIdsToParent()
     this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
 
@@ -208,8 +198,7 @@ export class AddNodeChild implements Action {
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
 
-  do(): void {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore): void {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     editorStore.editData?.selectedNodeIds.length === 0
@@ -232,9 +221,7 @@ export class AddNodeChild implements Action {
     this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  undo() {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore) {
     this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
@@ -255,8 +242,7 @@ export class AddNodeChild implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  redo(): void {
-    const editorStore = useEditorStore()
+  redo(editorStore: EditorStore): void {
     editorStore.emptySelectedNodeIdsToParent()
     this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
 
@@ -288,8 +274,7 @@ export class AddNodeParent implements Action {
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
 
-  do(): void {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore): void {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     editorStore.editData?.selectedNodeIds.length === 0
@@ -323,9 +308,7 @@ export class AddNodeParent implements Action {
     this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  undo() {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore) {
     this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
@@ -356,8 +339,7 @@ export class AddNodeParent implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  redo(): void {
-    const editorStore = useEditorStore()
+  redo(editorStore: EditorStore): void {
     editorStore.emptySelectedNodeIdsToParent()
     this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
 
@@ -402,8 +384,7 @@ export class Paste implements Action {
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
 
-  do(): void {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore): void {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     this.selectedNodeIds.length === 0
@@ -432,9 +413,7 @@ export class Paste implements Action {
     this.createdNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  undo(): void {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore): void {
     this.deletedNodes = []
     editorStore.toChild(() => {
       this.createdNodeIds
@@ -455,8 +434,7 @@ export class Paste implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  redo() {
-    const editorStore = useEditorStore()
+  redo(editorStore: EditorStore) {
     editorStore.emptySelectedNodeIdsToParent()
     this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
 
@@ -484,8 +462,7 @@ export class Remove implements Action {
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
 
-  do(): void {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore): void {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     this.deletedNodes = []
@@ -508,9 +485,7 @@ export class Remove implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  undo(): void {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore): void {
     editorStore.toChild(() => {
       this.deletedNodes
           .slice()
@@ -526,10 +501,10 @@ export class Remove implements Action {
     })
 
     editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  redo(): void {
-    const editorStore = useEditorStore()
+  redo(editorStore: EditorStore): void {
     this.deletedNodes = []
     editorStore.toChild(() => {
       this.selectedNodeIds
@@ -559,8 +534,7 @@ export class RemoveParent implements Action {
   private selectedNodeIds: string[] = []
   private deletedNodes: DeletedNode[] = []
 
-  do(): void {
-    const editorStore = useEditorStore()
+  do(editorStore: EditorStore): void {
     this.selectedNodeIds = editorStore.editData?.selectedNodeIds || []
 
     editorStore.toChild(() => {
@@ -594,9 +568,7 @@ export class RemoveParent implements Action {
     editorStore.emptySelectedNodeIdsToParent()
   }
 
-  undo(): void {
-    const editorStore = useEditorStore()
-
+  undo(editorStore: EditorStore): void {
     editorStore.toChild(() => {
       this.deletedNodes
           .slice()
@@ -625,11 +597,10 @@ export class RemoveParent implements Action {
     })
 
     editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds.forEach(editorStore.selectNodeIdManyToParent)
   }
 
-  redo(): void {
-    const editorStore = useEditorStore()
-
+  redo(editorStore: EditorStore): void {
     editorStore.toChild(() => {
       this.selectedNodeIds
           .forEach((selectedNodeId) => {

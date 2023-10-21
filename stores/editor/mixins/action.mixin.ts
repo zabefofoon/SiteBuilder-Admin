@@ -19,7 +19,7 @@ export const actionMixin = () => {
 
   const copiedNodes = ref<Node[]>([])
 
-  const initActionManager = () => actionManager.value = ActionManager.of()
+  const initActionManager = () => actionManager.value = ActionManager.of(editorStore)
   const selectNodeIdOneToParent = (nodeId: string) => editorStore.toParent(() => {
     if (!editorStore.editData) return
 

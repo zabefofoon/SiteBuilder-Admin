@@ -9,3 +9,5 @@ export const useEditorStore = defineStore('editor', () => {
     ...actionMixin()
   }
 })
+
+export type EditorStore = ReturnType<typeof useEditorStore>;

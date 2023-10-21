@@ -1,4 +1,5 @@
 import type {Action} from "./Action"
+import {EditorStore} from "~/stores/editor/editor.store"
 
 export class ActionManager {
 
@@ -6,8 +7,11 @@ export class ActionManager {
 
   readonly undoneActions: Action[] = []
 
+  constructor(private readonly editorStore: EditorStore) {
+  }
+
   execute(action: Action) {
-    action.do()
+    action.do(this.editorStore)
     this.actions.push(action)
     this.emptyUndoneActions()
   }
@@ -15,7 +19,7 @@ export class ActionManager {
   executeUndo() {
     const lastAction = this.actions.pop()
     if (lastAction) {
-      lastAction.undo()
+      lastAction.undo(this.editorStore)
       this.undoneActions.push(lastAction)
     }
   }
@@ -23,7 +27,7 @@ export class ActionManager {
   executeRedo() {
     const lastUndoneAction = this.undoneActions.pop()
     if (lastUndoneAction) {
-      lastUndoneAction.redo()
+      lastUndoneAction.redo(this.editorStore)
       this.actions.push(lastUndoneAction)
     }
   }
@@ -37,7 +41,7 @@ export class ActionManager {
     this.undoneActions.splice(0, this.undoneActions.length)
   }
 
-  static of() {
-    return new ActionManager()
+  static of(editorStore: EditorStore) {
+    return new ActionManager(editorStore)
   }
 }
