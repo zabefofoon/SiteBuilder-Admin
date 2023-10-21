@@ -62,3 +62,51 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-select {
+  $src: 'https://api.iconify.design/material-symbols/gesture-select.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-plus {
+  $src: 'https://api.iconify.design/mdi/plus.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-arrow-up {
+  $src: 'https://api.iconify.design/ph/arrow-up-light.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-child {
+  $src: 'https://api.iconify.design/clarity/child-arrow-line.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-trash {
+  $src: 'https://api.iconify.design/mdi/trash-outline.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-copy {
+  $src: 'https://api.iconify.design/material-symbols/copy-all-sharp.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-cut {
+  $src: 'https://api.iconify.design/material-symbols/cut.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-paste {
+  $src: 'https://api.iconify.design/material-symbols/content-paste.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}

@@ -26,10 +26,24 @@ export const actionMixin = () => {
     editorStore.editData.selectedNodeIds = []
     editorStore.editData.selectedNodeIds.push(nodeId)
   })
+
+  const selectNodeIdOneToChild = (nodeId: string) => editorStore.toChild(() => {
+    if (!editorStore.editData) return
+
+    editorStore.editData.selectedNodeIds = []
+    editorStore.editData.selectedNodeIds.push(nodeId)
+  })
+
   const emptySelectedNodeIdsToParent = () => editorStore.toParent(() => {
     if (!editorStore.editData) return
     editorStore.editData.selectedNodeIds = []
   })
+
+  const emptySelectedNodeIdsToChild = () => editorStore.toChild(() => {
+    if (!editorStore.editData) return
+    editorStore.editData.selectedNodeIds = []
+  })
+
   const selectNodeIdManyToParent = (nodeId: string) => editorStore.toParent(() => {
     if (!editorStore.editData) return
     editorStore.editData.selectedNodeIds.push(nodeId)
@@ -61,6 +75,14 @@ export const actionMixin = () => {
   const remove = () => actionManager.value?.execute(Remove.of())
 
   const removeParent = () => actionManager.value?.execute(RemoveParent.of())
+
+  const selectParent = () => {
+    const found = editorStore.editData?.findNode(editorStore.editData?.selectedNodeIds[0])
+
+    found?.parentId
+        ? selectNodeIdOneToChild(found.parentId)
+        : emptySelectedNodeIdsToChild()
+  }
 
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))
@@ -95,6 +117,8 @@ export const actionMixin = () => {
     paste,
 
     remove,
-    removeParent
+    removeParent,
+
+    selectParent
   }
 }
