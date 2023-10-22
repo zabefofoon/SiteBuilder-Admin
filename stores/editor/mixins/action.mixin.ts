@@ -8,10 +8,28 @@ import {
   Paste,
   Remove,
   RemoveParent,
-  SelectResponsiveMode, SetNodeLayoutColumn, SetNodeLayoutDirection,
-  SetNodeLayoutType
+  SelectResponsiveMode,
+  SetNodeLayoutColumn,
+  SetNodeLayoutCrossAxis,
+  SetNodeLayoutDirection,
+  SetNodeLayoutGap,
+  SetNodeLayoutHeight,
+  SetNodeLayoutHidden, SetNodeLayoutInset,
+  SetNodeLayoutMainAxis,
+  SetNodeLayoutMaxWidth, SetNodeLayoutPadding, SetNodeLayoutPosition, SetNodeLayoutTransparent,
+  SetNodeLayoutType,
+  SetNodeLayoutWidth
 } from "~/models/Action"
-import {Node, NodeDirection, NodeLayoutType, ResponsiveMode} from "~/models/Node"
+import {
+  CrossAxis,
+  Direction,
+  MainAxis,
+  Node,
+  NodeDirection,
+  NodeLayoutType,
+  Position,
+  ResponsiveMode
+} from "~/models/Node"
 import {generateUniqueId} from "~/utils/util"
 
 export const actionMixin = () => {
@@ -100,6 +118,21 @@ export const actionMixin = () => {
 
   const setNodesLayoutColumns = (length: number) => actionManager.value?.execute(SetNodeLayoutColumn.of(length))
 
+  const setNodesLayoutGap = (gap: string) => actionManager.value?.execute(SetNodeLayoutGap.of(gap))
+  const setNodesLayoutMainAxis = (mainAxis: MainAxis) => actionManager.value?.execute(SetNodeLayoutMainAxis.of(mainAxis))
+  const setNodesLayoutCrossAxis = (crossAxis: CrossAxis) => actionManager.value?.execute(SetNodeLayoutCrossAxis.of(crossAxis))
+  const setNodesLayoutHidden = (hidden: boolean) => actionManager.value?.execute(SetNodeLayoutHidden.of(hidden))
+  const setNodesLayoutWidth = (width: string) => actionManager.value?.execute(SetNodeLayoutWidth.of(width))
+  const setNodesLayoutHeight = (height: string) => actionManager.value?.execute(SetNodeLayoutHeight.of(height))
+  const setNodesLayoutMaxWidth = (maxWidth: string) => actionManager.value?.execute(SetNodeLayoutMaxWidth.of(maxWidth))
+  const setNodesTransparent = (transparent: boolean) => actionManager.value?.execute(SetNodeLayoutTransparent.of(transparent))
+  const setNodesLayoutPadding = (direction: Direction,
+                                 value: string) => actionManager.value?.execute(SetNodeLayoutPadding.of(direction, value))
+
+  const setNodesLayoutPosition = (position: Position) => actionManager.value?.execute(SetNodeLayoutPosition.of(position))
+  const setNodesLayoutInset = (direction: Direction,
+                               value: string) => actionManager.value?.execute(SetNodeLayoutInset.of(direction, value))
+
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))
     newCopiedNodes.forEach((childNode) => {
@@ -143,6 +176,17 @@ export const actionMixin = () => {
 
     setNodeLayoutType,
     setNodeLayoutDirection,
-    setNodesLayoutColumns
+    setNodesLayoutColumns,
+    setNodesLayoutGap,
+    setNodesLayoutMainAxis,
+    setNodesLayoutCrossAxis,
+    setNodesLayoutHidden,
+    setNodesLayoutWidth,
+    setNodesLayoutHeight,
+    setNodesLayoutMaxWidth,
+    setNodesTransparent,
+    setNodesLayoutPadding,
+    setNodesLayoutPosition,
+    setNodesLayoutInset
   }
 }

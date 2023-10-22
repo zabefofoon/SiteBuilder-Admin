@@ -110,3 +110,27 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-padding-left {
+  $src: 'https://api.iconify.design/fluent-mdl2/padding-left.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-padding-top {
+  $src: 'https://api.iconify.design/fluent-mdl2/padding-top.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-padding-right {
+  $src: 'https://api.iconify.design/fluent-mdl2/padding-right.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-padding-bottom {
+  $src: 'https://api.iconify.design/fluent-mdl2/padding-bottom.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}

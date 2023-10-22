@@ -1,6 +1,6 @@
 <template>
   <div class="node | border border-dashed"
-       :class="[spacingClass, outlineClass, selectedClass, gridClass, flexClass]"
+       :class="[spacingClass, outlineClass, selectedClass, gridClass, flexClass, layoutClass]"
        @click.stop="clickHandler">
     <div class="text-xs">
       id: {{ node.id }}<br/>
@@ -57,6 +57,46 @@ const flexClass = computed(() => (<ResponsiveMode[]>Object.keys(props.node.layou
         result = result + `${current}:mainAxis-${props.node.layout[current].mainAxis} `
       if (props.node.layout[current].crossAxis !== undefined)
         result = result + `${current}:crossAxis-${props.node.layout[current].crossAxis} `
+
+      return acc + result
+    }, ''))
+
+const layoutClass = computed(() => (<ResponsiveMode[]>Object.keys(props.node.layout))
+    .reduce<string>((acc, current) => {
+      let result = ''
+      if (props.node.layout[current].width)
+        result = result + `${current}:width-${props.node.layout[current].width} `
+      if (props.node.layout[current].height)
+        result = result + `${current}:height-${props.node.layout[current].height} `
+      if (props.node.layout[current].maxWidth)
+        result = result + `${current}:maxWidth-${props.node.layout[current].maxWidth} `
+
+      if (props.node.layout[current].position !== undefined)
+        result = result + `${current}:position-${props.node.layout[current].position} `
+
+      if (props.node.layout[current].hidden)
+        result = result + `${current}:hidden-${props.node.layout[current].hidden || false} `
+
+      if (props.node.layout[current].paddingLeft !== undefined)
+        result = result + `${current}:padding-left-${props.node.layout[current].paddingLeft} `
+      if (props.node.layout[current].paddingTop !== undefined)
+        result = result + `${current}:padding-top-${props.node.layout[current].paddingTop} `
+      if (props.node.layout[current].paddingRight !== undefined)
+        result = result + `${current}:padding-right-${props.node.layout[current].paddingRight} `
+      if (props.node.layout[current].paddingBottom !== undefined)
+        result = result + `${current}:padding-bottom-${props.node.layout[current].paddingBottom} `
+
+      if (props.node.layout[current].left !== undefined)
+        result = result + `${current}:left-${props.node.layout[current].left} `
+      if (props.node.layout[current].top !== undefined)
+        result = result + `${current}:top-${props.node.layout[current].top} `
+      if (props.node.layout[current].right !== undefined)
+        result = result + `${current}:right-${props.node.layout[current].right} `
+      if (props.node.layout[current].bottom !== undefined)
+        result = result + `${current}:bottom-${props.node.layout[current].bottom} `
+
+      if (props.node.layout[current].transparent)
+        result = result + `${current}:transparent `
 
       return acc + result
     }, ''))

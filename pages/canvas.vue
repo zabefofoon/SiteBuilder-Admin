@@ -28,7 +28,7 @@ const listenMessage = (event: MessageEvent) => {
     editorStore.loadEditData()
 }
 
-const generatedCss = computed(() => generateCss(editorStore.editData?.nodes || [], false))
+const generatedCss = computed(() => generateCss(editorStore.editData?.nodes || [], true))
 
 onMounted(() => {
   setTimeout(() => editorStore.postLoadIframeToParent(), 500)

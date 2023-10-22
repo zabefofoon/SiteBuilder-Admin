@@ -1,5 +1,14 @@
 import type {EditorStore} from "~/stores/editor/editor.store"
-import {Node, NodeDirection, NodeLayoutType, ResponsiveMode} from "~/models/Node"
+import {
+  CrossAxis,
+  Direction,
+  MainAxis,
+  Node,
+  NodeDirection,
+  NodeLayoutType,
+  Position,
+  ResponsiveMode
+} from "~/models/Node"
 
 export interface Action {
   do: (editorStore: EditorStore) => void,
@@ -832,5 +841,576 @@ export class SetNodeLayoutColumn implements Action {
 
   static of(length: number) {
     return new SetNodeLayoutColumn(length)
+  }
+}
+
+export class SetNodeLayoutGap implements Action {
+
+  originalGap?: string
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly gap: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalGap = found.layout[responsiveMode].gap
+
+      found.setLayoutGap(responsiveMode!, this.gap)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setLayoutGap(this.originalResponsiveMode, this.originalGap || '')
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setLayoutGap(this.originalResponsiveMode, this.gap)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(gap: string) {
+    return new SetNodeLayoutGap(gap)
+  }
+}
+
+export class SetNodeLayoutMainAxis implements Action {
+
+  originalMainAxis: MainAxis = 'start'
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly mainAxis: MainAxis) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalMainAxis = found.layout[responsiveMode].mainAxis || 'start'
+
+      found.setMainAxis(responsiveMode!, this.mainAxis)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setMainAxis(this.originalResponsiveMode, this.originalMainAxis)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setMainAxis(this.originalResponsiveMode, this.mainAxis)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(mainAxis: MainAxis) {
+    return new SetNodeLayoutMainAxis(mainAxis)
+  }
+}
+
+export class SetNodeLayoutCrossAxis implements Action {
+
+  originalCrossAxis: CrossAxis = 'start'
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly crossAxis: CrossAxis) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalCrossAxis = found.layout[responsiveMode].crossAxis || 'start'
+
+      found.setCrossAxis(responsiveMode!, this.crossAxis)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setCrossAxis(this.originalResponsiveMode, this.originalCrossAxis)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setCrossAxis(this.originalResponsiveMode, this.crossAxis)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(crossAxis: CrossAxis) {
+    return new SetNodeLayoutCrossAxis(crossAxis)
+  }
+}
+
+export class SetNodeLayoutHidden implements Action {
+
+  originalHidden = false
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly hidden: boolean) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalHidden = found.layout[responsiveMode].hidden
+
+      found.setHidden(responsiveMode!, this.hidden)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setHidden(this.originalResponsiveMode, this.originalHidden)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setHidden(this.originalResponsiveMode, this.hidden)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(hidden: boolean) {
+    return new SetNodeLayoutHidden(hidden)
+  }
+}
+
+export class SetNodeLayoutWidth implements Action {
+
+  originalWidth?: string
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly width: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalWidth = found.layout[responsiveMode].width
+
+      found.setWidth(responsiveMode!, this.width)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setWidth(this.originalResponsiveMode, this.originalWidth)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setWidth(this.originalResponsiveMode, this.width)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(width: string) {
+    return new SetNodeLayoutWidth(width)
+  }
+}
+
+export class SetNodeLayoutHeight implements Action {
+
+  originalHeight?: string
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly height: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalHeight = found.layout[responsiveMode].height
+
+      found.setHeight(responsiveMode!, this.height)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setHeight(this.originalResponsiveMode, this.originalHeight)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setHeight(this.originalResponsiveMode, this.height)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(height: string) {
+    return new SetNodeLayoutHeight(height)
+  }
+}
+
+export class SetNodeLayoutMaxWidth implements Action {
+
+  originalMaxWidth?: string
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly maxWidth?: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalMaxWidth = found.layout[responsiveMode].maxWidth
+
+      found.setMaxWidth(responsiveMode!, this.maxWidth)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setMaxWidth(this.originalResponsiveMode, this.originalMaxWidth)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setMaxWidth(this.originalResponsiveMode, this.maxWidth)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(maxWidth?: string) {
+    return new SetNodeLayoutMaxWidth(maxWidth)
+  }
+}
+
+export class SetNodeLayoutTransparent implements Action {
+
+  originalTransparent?: boolean
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly transparent: boolean) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalTransparent = found.layout[responsiveMode].transparent
+
+      found.setTransparent(responsiveMode!, this.transparent)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setTransparent(this.originalResponsiveMode, this.originalTransparent)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setTransparent(this.originalResponsiveMode, this.transparent)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(transparent: boolean) {
+    return new SetNodeLayoutTransparent(transparent)
+  }
+}
+
+export class SetNodeLayoutPadding implements Action {
+
+  originalValue?: string
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly direction: Direction,
+              private readonly value: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+      this.originalResponsiveMode = responsiveMode
+
+      if (this.direction === 'left')
+        this.originalValue = found.layout[responsiveMode].paddingLeft
+      else if (this.direction === 'top')
+        this.originalValue = found.layout[responsiveMode].paddingTop
+      else if (this.direction === 'right')
+        this.originalValue = found.layout[responsiveMode].paddingRight
+      else
+        this.originalValue = found.layout[responsiveMode].paddingBottom
+
+      found.setPadding(responsiveMode!, this.direction, this.value)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setPadding(this.originalResponsiveMode!, this.direction, this.originalValue)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setPadding(this.originalResponsiveMode, this.direction, this.value)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(direction: Direction, value: string) {
+    return new SetNodeLayoutPadding(direction, value)
+  }
+}
+
+
+export class SetNodeLayoutPosition implements Action {
+
+  originalPosition: Position = 'relative'
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly position: Position) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+
+      this.originalResponsiveMode = responsiveMode
+      this.originalPosition = found.layout[responsiveMode].position || 'relative'
+
+      found.setPosition(responsiveMode!, this.position)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setPosition(this.originalResponsiveMode, this.originalPosition)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setPosition(this.originalResponsiveMode, this.position)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(position: Position) {
+    return new SetNodeLayoutPosition(position)
+  }
+}
+
+
+export class SetNodeLayoutInset implements Action {
+
+  originalValue?: string
+  originalResponsiveMode: ResponsiveMode = 'large'
+  selectedNodeId?: string
+
+  constructor(private readonly direction: Direction,
+              private readonly value: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      this.selectedNodeId = editorStore.editData.selectedNodeIds[0]
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      const responsiveMode = editorStore.editData.responsiveMode
+      this.originalResponsiveMode = responsiveMode
+
+      this.originalValue = found.layout[responsiveMode][this.direction]
+      found.setInset(responsiveMode!, this.direction, this.value)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setInset(this.originalResponsiveMode!, this.direction, this.originalValue)
+    })
+
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      if (!editorStore.editData) return
+
+      const found = editorStore.editData.findNode(this.selectedNodeId)!
+      found.setInset(this.originalResponsiveMode, this.direction, this.value)
+    })
+    editorStore.selectNodeIdOneToChild(this.selectedNodeId!)
+  }
+
+  static of(direction: Direction, value: string) {
+    return new SetNodeLayoutInset(direction, value)
   }
 }

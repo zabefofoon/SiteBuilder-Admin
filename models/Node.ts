@@ -4,6 +4,7 @@ export class Node {
   id = generateUniqueId()
   nodes: Node[] = []
 
+  // TODO 제거
   selectedResponsiveMode: ResponsiveMode = 'large'
 
   layout: ResponsiveNodeLayout = {
@@ -48,62 +49,76 @@ export class Node {
     this.layout[responsiveMode].columns = columns
   }
 
-  setLayoutGap(gap: string) {
-    this.layout[this.selectedResponsiveMode].gap = gap
+  setLayoutGap(responsiveMode: ResponsiveMode,
+               gap: string) {
+    this.layout[responsiveMode].gap = gap
   }
 
-  setWidth(width: string) {
-    this.layout[this.selectedResponsiveMode].width = width
+  setMainAxis(responsiveMode: ResponsiveMode,
+              mainAxis: MainAxis) {
+    this.layout[responsiveMode].mainAxis = mainAxis
   }
 
-  setHeight(height: string) {
-    this.layout[this.selectedResponsiveMode].height = height
+  setCrossAxis(responsiveMode: ResponsiveMode,
+               crossAxis: CrossAxis) {
+    this.layout[responsiveMode].crossAxis = crossAxis
   }
 
-  setMaxWidth(maxWidth: string) {
-    this.layout[this.selectedResponsiveMode].maxWidth = maxWidth
+  setHidden(responsiveMode: ResponsiveMode,
+            hidden: boolean) {
+    this.layout[responsiveMode].hidden = hidden
   }
 
-  setMainAxis(mainAxis: MainAxis) {
-    this.layout[this.selectedResponsiveMode].mainAxis = mainAxis
+  setWidth(responsiveMode: ResponsiveMode,
+           width?: string) {
+    this.layout[responsiveMode].width = width
   }
 
-  setCrossAxis(crossAxis: CrossAxis) {
-    this.layout[this.selectedResponsiveMode].crossAxis = crossAxis
+  setHeight(responsiveMode: ResponsiveMode,
+            height?: string) {
+    this.layout[responsiveMode].height = height
   }
 
-  setPosition(position: Position) {
-    this.layout[this.selectedResponsiveMode].position = position
+  setMaxWidth(responsiveMode: ResponsiveMode,
+              maxWidth?: string) {
+    this.layout[responsiveMode].maxWidth = maxWidth
   }
 
-  setHidden(hidden: boolean) {
-    this.layout[this.selectedResponsiveMode].hidden = hidden
+  setTransparent(responsiveMode: ResponsiveMode,
+                 transparent?: boolean) {
+    this.layout[responsiveMode].transparent = transparent
   }
 
-  setTransparent(transparent?: boolean) {
-    this.layout[this.selectedResponsiveMode].transparent = transparent
-  }
-
-  setPadding(direction: Direction, value?: string) {
+  setPadding(responsiveMode: ResponsiveMode,
+             direction: Direction,
+             value?: string) {
     if (direction === 'left')
-      this.layout[this.selectedResponsiveMode].paddingLeft = value
+      this.layout[responsiveMode].paddingLeft = value
     else if (direction === 'top')
-      this.layout[this.selectedResponsiveMode].paddingTop = value
+      this.layout[responsiveMode].paddingTop = value
     else if (direction === 'right')
-      this.layout[this.selectedResponsiveMode].paddingRight = value
+      this.layout[responsiveMode].paddingRight = value
     else if (direction === 'bottom')
-      this.layout[this.selectedResponsiveMode].paddingBottom = value
+      this.layout[responsiveMode].paddingBottom = value
   }
 
-  setInset(direction: Direction, value?: string) {
+  setPosition(responsiveMode: ResponsiveMode,
+              position: Position) {
+    this.layout[responsiveMode].position = position
+  }
+
+
+  setInset(responsiveMode: ResponsiveMode,
+           direction: Direction,
+           value?: string) {
     if (direction === 'left')
-      this.layout[this.selectedResponsiveMode].left = value
+      this.layout[responsiveMode].left = value
     else if (direction === 'top')
-      this.layout[this.selectedResponsiveMode].top = value
+      this.layout[responsiveMode].top = value
     else if (direction === 'right')
-      this.layout[this.selectedResponsiveMode].right = value
+      this.layout[responsiveMode].right = value
     else if (direction === 'bottom')
-      this.layout[this.selectedResponsiveMode].bottom = value
+      this.layout[responsiveMode].bottom = value
   }
 
   forEach(nodes: Node[], cb: (node: Node) => void) {
