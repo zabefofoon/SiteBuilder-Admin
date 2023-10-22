@@ -2,7 +2,8 @@
   <div class="node | border border-dashed"
        :class="[spacingClass, outlineClass, selectedClass, gridClass, flexClass, layoutClass]"
        @click.stop="clickHandler">
-    <div class="text-xs">
+    <div v-if="node.nodes.length === 0"
+         class="text-xs">
       id: {{ node.id }}<br/>
       parent: {{ node.parentId }}<br/>
     </div>
