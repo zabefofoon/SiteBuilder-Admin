@@ -1,7 +1,9 @@
 <template>
   <div v-click-away="() => editorStore.emptySelectedNodeIdsToParent()"
        class="bg-white | border | h-full min-h-screen">
-    <span class="text-xs">{{ editorStore?.editData }}</span>
+    <ClientOnly>
+      <UiStyle>{{ generatedCss }}</UiStyle>
+    </ClientOnly>
     <hr/>
     <Node v-for="node in editorStore.editData?.nodes || []"
           :key="node.id"
@@ -14,6 +16,8 @@ import {onMounted} from "#imports"
 import {useEditorStore} from "~/stores/editor/editor.store"
 import Node from "~/components/Node.vue"
 import {directive as vClickAway} from "vue3-click-away"
+import {generateCss} from "~/utils/css.util"
+import UiStyle from "~/components/UiStyle.vue"
 
 const editorStore = useEditorStore()
 
@@ -23,6 +27,8 @@ const listenMessage = (event: MessageEvent) => {
   if (event.data.type === 'updateToChild')
     editorStore.loadEditData()
 }
+
+const generatedCss = computed(() => generateCss(editorStore.editData?.nodes || [], false))
 
 onMounted(() => {
   setTimeout(() => editorStore.postLoadIframeToParent(), 500)
