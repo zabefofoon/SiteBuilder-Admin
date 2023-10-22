@@ -14,9 +14,13 @@ import {
   SetNodeLayoutDirection,
   SetNodeLayoutGap,
   SetNodeLayoutHeight,
-  SetNodeLayoutHidden, SetNodeLayoutInset,
+  SetNodeLayoutHidden,
+  SetNodeLayoutInset,
   SetNodeLayoutMainAxis,
-  SetNodeLayoutMaxWidth, SetNodeLayoutPadding, SetNodeLayoutPosition, SetNodeLayoutTransparent,
+  SetNodeLayoutMaxWidth,
+  SetNodeLayoutPadding,
+  SetNodeLayoutPosition,
+  SetNodeLayoutTransparent,
   SetNodeLayoutType,
   SetNodeLayoutWidth
 } from "~/models/Action"
@@ -30,7 +34,7 @@ import {
   Position,
   ResponsiveMode
 } from "~/models/Node"
-import {generateUniqueId} from "~/utils/util"
+import {generateUniqueId, prepend} from "~/utils/util"
 
 export const actionMixin = () => {
   const editorStore = useEditorStore()
@@ -118,20 +122,20 @@ export const actionMixin = () => {
 
   const setNodesLayoutColumns = (length: number) => actionManager.value?.execute(SetNodeLayoutColumn.of(length))
 
-  const setNodesLayoutGap = (gap: string) => actionManager.value?.execute(SetNodeLayoutGap.of(gap))
+  const setNodesLayoutGap = (gap: string) => actionManager.value?.execute(SetNodeLayoutGap.of(prepend(gap)))
   const setNodesLayoutMainAxis = (mainAxis: MainAxis) => actionManager.value?.execute(SetNodeLayoutMainAxis.of(mainAxis))
   const setNodesLayoutCrossAxis = (crossAxis: CrossAxis) => actionManager.value?.execute(SetNodeLayoutCrossAxis.of(crossAxis))
   const setNodesLayoutHidden = (hidden: boolean) => actionManager.value?.execute(SetNodeLayoutHidden.of(hidden))
-  const setNodesLayoutWidth = (width: string) => actionManager.value?.execute(SetNodeLayoutWidth.of(width))
-  const setNodesLayoutHeight = (height: string) => actionManager.value?.execute(SetNodeLayoutHeight.of(height))
-  const setNodesLayoutMaxWidth = (maxWidth: string) => actionManager.value?.execute(SetNodeLayoutMaxWidth.of(maxWidth))
+  const setNodesLayoutWidth = (width: string) => actionManager.value?.execute(SetNodeLayoutWidth.of(prepend(width)))
+  const setNodesLayoutHeight = (height: string) => actionManager.value?.execute(SetNodeLayoutHeight.of(prepend(height)))
+  const setNodesLayoutMaxWidth = (maxWidth: string) => actionManager.value?.execute(SetNodeLayoutMaxWidth.of(prepend(maxWidth)))
   const setNodesTransparent = (transparent: boolean) => actionManager.value?.execute(SetNodeLayoutTransparent.of(transparent))
   const setNodesLayoutPadding = (direction: Direction,
-                                 value: string) => actionManager.value?.execute(SetNodeLayoutPadding.of(direction, value))
+                                 value: string) => actionManager.value?.execute(SetNodeLayoutPadding.of(direction, prepend(value)))
 
   const setNodesLayoutPosition = (position: Position) => actionManager.value?.execute(SetNodeLayoutPosition.of(position))
   const setNodesLayoutInset = (direction: Direction,
-                               value: string) => actionManager.value?.execute(SetNodeLayoutInset.of(direction, value))
+                               value: string) => actionManager.value?.execute(SetNodeLayoutInset.of(direction, prepend(value)))
 
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))

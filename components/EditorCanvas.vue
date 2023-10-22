@@ -1,5 +1,6 @@
 <template>
-  <div class="flex justify-center | w-full h-full">
+  <div class="flex flex-col items-center gap-1 | w-full h-full">
+    <EditorCanvasToolbar/>
     <iframe class="w-full"
             :style="{...editorStore.calculatedScreenSize}"
             ref="iframe"
@@ -10,17 +11,20 @@
 <script setup lang="ts">
 import {useEditorStore} from "~/stores/editor/editor.store"
 import {onBeforeUnmount, onMounted} from "#imports"
+import EditorCanvasToolbar from "~/components/EditorCanvasToolbar.vue"
 
 const editorStore = useEditorStore()
 const iframe = ref<HTMLIFrameElement>()
 
-const listenShortcut = ({code, ctrlKey, shiftKey, metaKey}: KeyboardEvent) => {
-  const isCtrl = ctrlKey || metaKey
-  if (code === 'KeyZ' && isCtrl)
-
-    shiftKey
+const listenShortcut = (event: KeyboardEvent) => {
+  const isCtrl = event.ctrlKey || event.metaKey
+  if (event.code === 'KeyZ' && isCtrl) {
+    event.shiftKey
         ? editorStore.actionManager?.executeRedo()
         : editorStore.actionManager?.executeUndo()
+
+    event.preventDefault()
+  }
 
   editorStore.postUpdateToChild()
 }

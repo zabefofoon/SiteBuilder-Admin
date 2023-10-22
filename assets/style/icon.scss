@@ -134,3 +134,21 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-spacing {
+  $src: 'https://api.iconify.design/mdi/format-paragraph-spacing.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-outline {
+  $src: 'https://api.iconify.design/mdi/border-none-variant.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-hidden {
+  $src: 'https://api.iconify.design/mdi/file-hidden.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}

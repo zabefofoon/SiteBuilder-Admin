@@ -1,5 +1,5 @@
 <template>
-  <div class="node | border border-dashed"
+  <div class="node"
        :class="[spacingClass, outlineClass, selectedClass, gridClass, flexClass, layoutClass]"
        @click.stop="clickHandler">
     <div v-if="node.nodes.length === 0"
@@ -29,9 +29,9 @@ const clickHandler = (event: MouseEvent) => {
       : editorStore.selectNodeIdOneToParent(props.node.id)
 }
 
-const spacingClass = computed(() => true ? 'p-2' : '')
+const spacingClass = computed(() => editorStore.editData?.isShowSpacing ? 'p-2' : '')
 
-const outlineClass = computed(() => true ? 'border-1' : 'border-0')
+const outlineClass = computed(() => editorStore.editData?.isShowOutline ? 'border border-dashed border-1' : '')
 
 const selectedClass = computed(() => editorStore.editData
     ?.selectedNodeIds
