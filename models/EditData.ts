@@ -1,18 +1,21 @@
-import {Node} from "~/models/Node"
+import {Node, ResponsiveMode} from "~/models/Node"
 
 export type EditDataRaw = {
   nodes: Node[]
   selectedNodeIds: string[]
+  responsiveMode: ResponsiveMode
 }
 
 export class EditData {
   id = undefined
   nodes: Node[] = []
   selectedNodeIds: string[] = []
+  responsiveMode: ResponsiveMode = 'large'
 
   constructor(editDataRaw?: EditDataRaw) {
     this.selectedNodeIds = editDataRaw?.selectedNodeIds || []
     this.nodes = Node.makeNodes(editDataRaw?.nodes || [])
+    this.responsiveMode = editDataRaw?.responsiveMode || 'large'
   }
 
   findNode(nodeId?: string): Node | undefined {

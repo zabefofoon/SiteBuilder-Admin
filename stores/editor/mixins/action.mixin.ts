@@ -7,9 +7,11 @@ import {
   AddNodeSiblingUp,
   Paste,
   Remove,
-  RemoveParent
+  RemoveParent,
+  SelectResponsiveMode, SetNodeLayoutColumn, SetNodeLayoutDirection,
+  SetNodeLayoutType
 } from "~/models/Action"
-import {Node} from "~/models/Node"
+import {Node, NodeDirection, NodeLayoutType, ResponsiveMode} from "~/models/Node"
 import {generateUniqueId} from "~/utils/util"
 
 export const actionMixin = () => {
@@ -48,6 +50,12 @@ export const actionMixin = () => {
     if (!editorStore.editData) return
     editorStore.editData.selectedNodeIds.push(nodeId)
   })
+
+  const selectNodeIdManyToChild = (nodeId: string) => editorStore.toChild(() => {
+    if (!editorStore.editData) return
+    editorStore.editData.selectedNodeIds.push(nodeId)
+  })
+
   const addNodeSiblingDownToChild = () => actionManager.value?.execute(AddNodeSiblingDown.of())
   const addNodeSiblingUpToChild = () => actionManager.value?.execute(AddNodeSiblingUp.of())
   const addNodeChildToChild = () => actionManager.value?.execute(AddNodeChild.of())
@@ -84,6 +92,14 @@ export const actionMixin = () => {
         : emptySelectedNodeIdsToChild()
   }
 
+  const changeResponsiveMode = (responsiveMode: ResponsiveMode) => actionManager.value?.execute(SelectResponsiveMode.of(responsiveMode))
+
+  const setNodeLayoutType = (layoutType: NodeLayoutType) => actionManager.value?.execute(SetNodeLayoutType.of(layoutType))
+
+  const setNodeLayoutDirection = (direction: NodeDirection) => actionManager.value?.execute(SetNodeLayoutDirection.of(direction))
+
+  const setNodesLayoutColumns = (length: number) => actionManager.value?.execute(SetNodeLayoutColumn.of(length))
+
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))
     newCopiedNodes.forEach((childNode) => {
@@ -103,6 +119,8 @@ export const actionMixin = () => {
 
     selectNodeIdOneToParent,
     selectNodeIdManyToParent,
+    selectNodeIdManyToChild,
+    selectNodeIdOneToChild,
 
     addNodeSiblingDownToChild,
     addNodeSiblingUpToChild,
@@ -119,6 +137,12 @@ export const actionMixin = () => {
     remove,
     removeParent,
 
-    selectParent
+    selectParent,
+
+    changeResponsiveMode,
+
+    setNodeLayoutType,
+    setNodeLayoutDirection,
+    setNodesLayoutColumns
   }
 }

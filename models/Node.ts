@@ -30,23 +30,22 @@ export class Node {
     this.selectedResponsiveMode = responsiveMode
   }
 
-  setLayoutType(type: NodeLayoutType) {
-    this.layout[this.selectedResponsiveMode].type = type
+  setLayoutType(responsiveMode: ResponsiveMode,
+                type: NodeLayoutType) {
+    this.layout[responsiveMode].type = type
 
-    if (type === 'grid')
-      this.layout[this.selectedResponsiveMode].columns = 1
-
-    type === 'grid'
-        ? this.layout[this.selectedResponsiveMode].direction = 'vertical'
-        : this.layout[this.selectedResponsiveMode].columns = 1
+    this.layout[responsiveMode].columns = type === 'grid' ? 1 : undefined
+    this.layout[responsiveMode].direction = type === 'stack' ? 'vertical' : undefined
   }
 
-  setLayoutStackDirection(direction: NodeDirection) {
-    this.layout[this.selectedResponsiveMode].direction = direction
+  setLayoutStackDirection(responsiveMode: ResponsiveMode,
+                          direction: NodeDirection) {
+    this.layout[responsiveMode].direction = direction
   }
 
-  setLayoutGridColumns(columns: number) {
-    this.layout[this.selectedResponsiveMode].columns = columns
+  setLayoutGridColumns(responsiveMode: ResponsiveMode,
+                       columns: number) {
+    this.layout[responsiveMode].columns = columns
   }
 
   setLayoutGap(gap: string) {

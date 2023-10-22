@@ -1,6 +1,7 @@
 <template>
-  <div class="w-full | bg-white | border">
-    <iframe class="w-full h-full"
+  <div class="flex justify-center | w-full h-full">
+    <iframe class="w-full"
+            :style="{...editorStore.calculatedScreenSize}"
             ref="iframe"
             src="/canvas"/>
   </div>
