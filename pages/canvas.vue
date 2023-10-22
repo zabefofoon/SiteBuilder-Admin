@@ -1,6 +1,6 @@
 <template>
-  <div v-click-away="() => editorStore.emptySelectedNodeIdsToParent()"
-       class="bg-white | border | h-full min-h-screen">
+  <div class="bg-white | border | h-full min-h-screen"
+       @click="editorStore.emptySelectedNodeIdsToParent">
     <ClientOnly>
       <UiStyle>{{ generatedCss }}</UiStyle>
     </ClientOnly>
@@ -15,7 +15,6 @@
 import {onMounted} from "#imports"
 import {useEditorStore} from "~/stores/editor/editor.store"
 import Node from "~/components/Node.vue"
-import {directive as vClickAway} from "vue3-click-away"
 import {generateCss} from "~/utils/css.util"
 import UiStyle from "~/components/UiStyle.vue"
 
