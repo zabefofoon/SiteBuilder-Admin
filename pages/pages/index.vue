@@ -61,7 +61,10 @@
                          :value="page[key]"
                          @change="setPageField(page, index, key, $event.target.value)"
                          @click.stop/>
-                  <span v-else>{{ page[key] }}</span>
+                  <span v-else>
+                     <i v-if="key === 'name' && page.lock" class="icon icon-lock"></i>
+                    {{ page[key] }}
+                  </span>
                 </template>
               </td>
             </tr>
@@ -79,8 +82,8 @@
 
 <script setup lang="ts">
 import type {PageBrief} from "~/models/PageBrief"
-import {onMounted} from "#imports"
 import {Database} from "~/models/Database"
+import pageApi from "~/api/page.api"
 
 const supabaseClient = useSupabaseClient<Database>()
 
@@ -110,21 +113,14 @@ const toggleValue = async (page: PageBrief,
               : page.url.replace(':id', '')
       : page.url
 
-  const {error} = await supabaseClient
-      .from('pages')
-      .update({
-        [_field]: value,
-        url
-      })
-      .eq('id', page.id)
 
-  if (error) {
-    console.error(error)
-    return
+  try {
+    await pageApi.patchPageBooleanField(_field, value, page.id, url)
+    pages.value[index].url = url
+    pages.value[index][_field] = !pages.value[index][_field]
+  } catch (e) {
+    console.error(e)
   }
-
-  pages.value[index].url = url
-  pages.value[index][_field] = !pages.value[index][_field]
 }
 
 const setPageField = async (page: PageBrief,
@@ -139,56 +135,24 @@ const setPageField = async (page: PageBrief,
       ? value.includes('/:id')
       : page.dynamic
 
-  const {error} = await supabaseClient
-      .from('pages')
-      .update({
-        [_field]: value,
-        dynamic
-      })
-      .eq('id', page.id)
 
-  if (error) {
-    console.error(error)
-    return
+  try {
+    await pageApi.patchPageStringField(_field, value, page.id, dynamic)
+    pages.value[index][_field] = value
+    pages.value[index].dynamic = dynamic
+  } catch (e) {
+    console.error(e)
   }
-
-  pages.value[index][_field] = value
-  pages.value[index].dynamic = dynamic
 }
 
 const loadPages = async () => {
-  const {data, error} = await supabaseClient
-      .from('pages')
-      .select('id, name, url, authorized, dynamic, lock, activate')
-
-  if (error) {
-    console.error(error)
-    return
-  }
-
-  setPages(data)
+  const result = await pageApi.getPages()
+  if (result) setPages(result)
 }
 
 const addPage = async () => {
-  const {data, error} = await supabaseClient
-      .from('pages')
-      .insert({
-        name: 'Some page',
-        url: '/somePage',
-        authorized: false,
-        dynamic: false,
-        lock: false,
-        activate: false
-      })
-      .select('id, name, url, authorized, dynamic, lock, activate')
-
-
-  if (error) {
-    console.error(error)
-    return
-  }
-
-  pages.value.push(data[0])
+  const data = await pageApi.addPage()
+  if (data) pages.value.push(data)
 }
 
 const deletePage = async (id: number) => {

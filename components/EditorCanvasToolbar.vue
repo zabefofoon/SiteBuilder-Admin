@@ -1,5 +1,10 @@
 <template>
   <div class="flex items-center | w-full | py-1.5 px-2 | bg-white | border">
+    <button class="flex | mr-1"
+            title="Back"
+            @click="$router.back()">
+      <i class="icon icon-chevron-left | text-2xl"></i>
+    </button>
     <div class="flex gap-1">
       <button class="flex | border rounded-md | p-0.5"
               :class="editorStore.editData?.isShowSpacing ? 'bg-black text-white' : ''"
@@ -20,8 +25,9 @@
         <i class="icon icon-hidden | text-xl"></i>
       </button>
     </div>
-    <button class="ml-auto px-2 py-1 | text-xs text-white uppercase | bg-black rounded-md"
-            title="Save Page">
+    <button class="ml-auto px-4 py-1 | text-xs text-white uppercase | bg-black rounded-md"
+            title="Save Page"
+            @click="editorStore.saveEditData(page.id)">
       save
     </button>
   </div>
@@ -29,6 +35,11 @@
 
 <script setup lang="ts">
 import {useEditorStore} from "~/stores/editor/editor.store"
+import {Page} from "~/models/PageBrief"
+
+defineProps<{
+  page: Page
+}>()
 
 const editorStore = useEditorStore()
 </script>

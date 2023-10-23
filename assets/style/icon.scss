@@ -63,6 +63,12 @@
   mask-image: url($src);
 }
 
+.icon-chevron-left {
+  $src: 'https://api.iconify.design/system-uicons/chevron-left.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
 .icon-select {
   $src: 'https://api.iconify.design/material-symbols/gesture-select.svg';
   -webkit-mask-image: url($src);
@@ -149,6 +155,12 @@
 
 .icon-hidden {
   $src: 'https://api.iconify.design/mdi/file-hidden.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-lock {
+  $src: 'https://api.iconify.design/material-symbols/lock-outline.svg';
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }

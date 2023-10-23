@@ -1,3 +1,5 @@
+데이터베이스 스키마 타입 생성: npx supabase gen types typescript --project-id zzxtdpjcfgfqzbiuepzb
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

@@ -27,8 +27,8 @@
 import Editor from "~/components/Editor.vue"
 import ConfigPage from "~/components/ConfigPage.vue"
 import {Page} from "~/models/PageBrief"
-import {Database} from "~/models/Database"
 import {computed, useRoute, useRouter} from "#imports"
+import pageApi from "~/api/page.api"
 
 const route = useRoute()
 const router = useRouter()
@@ -36,34 +36,22 @@ const router = useRouter()
 
 const page = ref<Page>()
 
-const supabaseClient = useSupabaseClient<Database>()
-
 const isConfig = computed(() => route.query.selectedTab === 'config'
     || !route.query.selectedTab)
 
 const isEditor = computed(() => route.query.selectedTab === 'editor')
 
 const loadPage = async () => {
-  page.value = {
-    id: 0,
-    name: 'name',
-    url: '/',
-    authorized: false,
-    dynamic: false,
-    lock: false,
-    activate: false
-  }
-
-  /*const {data, error} = await supabaseClient
-      .from('pages')
-      .select('*')
-      .eq('id', Number(route.params.id))
-      .limit(1)
-      .single()
-
-  if (error) console.error(error)
-
-  if (data) page.value = data*/
+  /*  page.value = {
+      id: 0,
+      name: 'name',
+      url: '/',
+      authorized: false,
+      dynamic: false,
+      lock: false,
+      activate: false
+    }*/
+  page.value = await pageApi.getPage(Number(route.params.id))
 }
 
 loadPage()

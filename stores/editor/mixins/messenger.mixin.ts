@@ -41,13 +41,13 @@ export const messengerMixin = () => {
 
   const toChild = (cb: () => void) => {
     cb()
-    editorStore.saveEditData()
+    editorStore.storeEditData()
     postUpdateToChild()
   }
 
   const toParent = (cb: () => void) => {
     cb()
-    editorStore.saveEditData()
+    editorStore.storeEditData()
     postUpdateToParent()
   }
 
