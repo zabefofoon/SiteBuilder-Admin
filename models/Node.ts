@@ -4,9 +4,6 @@ export class Node {
   id = generateUniqueId()
   nodes: Node[] = []
 
-  // TODO 제거
-  selectedResponsiveMode: ResponsiveMode = 'large'
-
   layout: ResponsiveNodeLayout = {
     small: {
       type: 'stack',
@@ -25,10 +22,6 @@ export class Node {
 
   removeNode(nodeId: string) {
     this.nodes = this.nodes.filter((node) => nodeId !== node.id)
-  }
-
-  selectResponsiveMode(responsiveMode: ResponsiveMode) {
-    this.selectedResponsiveMode = responsiveMode
   }
 
   setLayoutType(responsiveMode: ResponsiveMode,
