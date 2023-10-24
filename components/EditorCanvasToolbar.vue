@@ -24,6 +24,17 @@
               @click="editorStore.showHiddenElement(!editorStore.editData?.isShowHiddenElement)">
         <i class="icon icon-hidden | text-xl"></i>
       </button>
+      <span>|</span>
+      <button class="flex | border rounded-md | p-0.5"
+              :class="editorStore.screenSize === 'large' ? 'bg-black text-white' : ''"
+              @click="editorStore.setScreenSize('large')">
+        <i class="icon icon-screen-l | text-xl"></i>
+      </button>
+      <button class="flex | border rounded-md | p-0.5"
+              :class="editorStore.screenSize === 'small' ? 'bg-black text-white' : ''"
+              @click="editorStore.setScreenSize('small')">
+        <i class="icon icon-screen-s | text-xl"></i>
+      </button>
     </div>
     <button class="ml-auto px-4 py-1 | text-xs text-white uppercase | bg-black rounded-md"
             title="Save Page"

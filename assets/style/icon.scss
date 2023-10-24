@@ -164,3 +164,27 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-screen-xl {
+  $src: 'https://api.iconify.design/mdi/size-xl.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-screen-l {
+  $src: 'https://api.iconify.design/mdi/size-l.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-screen-m {
+  $src: 'https://api.iconify.design/mdi/size-m.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-screen-s {
+  $src: 'https://api.iconify.design/mdi/size-s.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
