@@ -25,7 +25,7 @@ export const editDataMixin = () => {
   })
 
   const saveEditData = async (pageId: number) => {
-    await pageApi.setPageDetail(pageId, JSON.stringify(toRaw(editData.value)))
+    await pageApi.setPageDetail(pageId, JSON.stringify(EditData.serialize(editData.value)))
     alert('Saved')
   }
 

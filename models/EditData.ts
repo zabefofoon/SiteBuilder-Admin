@@ -48,6 +48,20 @@ export class EditData {
     this.nodes = this.nodes.filter((node) => nodeId !== node.id)
   }
 
+  static serialize(editDataRaw?: EditDataRaw) {
+    if (editDataRaw) {
+      const cloned = JSON.parse(JSON.stringify(editDataRaw))
+      delete cloned.selectedNodeIds
+      delete cloned.responsiveMode
+      delete cloned.isShowSpacing
+      delete cloned.isShowOutline
+      delete cloned.isShowHiddenElement
+
+      return cloned
+    }
+    return null
+  }
+
   static of(editDataRaw?: EditDataRaw) {
     return new EditData(editDataRaw)
   }
