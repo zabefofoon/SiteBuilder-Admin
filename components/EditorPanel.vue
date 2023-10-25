@@ -1,7 +1,8 @@
 <template>
-  <div class="w-80 | bg-white | border">
+  <div class="w-80 | relative | bg-white | border | overflow-hidden">
     <EditorPanelNode/>
     <EditorPanelLayout/>
+    <EditorPanelWidgets/>
   </div>
 </template>
 

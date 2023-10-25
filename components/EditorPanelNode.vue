@@ -81,6 +81,20 @@
         </button>
       </div>
       <hr/>
+      <div class="flex">
+        <button class="config-button"
+                title="Add Widget"
+                @click="editorStore.showWidgets(true)">
+          <i class="icon icon-add-widget"></i>
+          <span class="text-xs">widget</span>
+        </button>
+        <div class="border-l"></div>
+        <button class="config-button">
+          <i class="icon icon-remove"></i>
+          <span class="text-xs">remove</span>
+        </button>
+      </div>
+      <hr/>
     </div>
   </div>
 </template>

@@ -188,3 +188,21 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-add-widget {
+  $src: 'https://api.iconify.design/solar/widget-add-outline.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-remove {
+  $src: 'https://api.iconify.design/material-symbols/remove.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-close {
+  $src: 'https://api.iconify.design/ic/outline-close.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
