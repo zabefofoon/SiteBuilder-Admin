@@ -35,6 +35,7 @@ import {
   ResponsiveMode
 } from "~/models/Node"
 import {generateUniqueId, prepend} from "~/utils/util"
+import {Widget} from "~/models/Widget"
 
 export const actionMixin = () => {
   const editorStore = useEditorStore()
@@ -150,6 +151,25 @@ export const actionMixin = () => {
     return newCopiedNodes
   }
 
+
+  const selectWidget = (widgetCode: string) => editorStore.toChild(() => {
+    editorStore.editData
+        ?.selectedNodeIds
+        .forEach((nodeId) => editorStore.editData
+            ?.findNode(nodeId)
+            ?.setWidget(Widget.of(nodeId, widgetCode)))
+
+    editorStore.showWidgets(false)
+  })
+
+  const deleteWidget = () => editorStore.toChild(() => {
+    editorStore.editData
+        ?.selectedNodeIds
+        .forEach((nodeId) => editorStore.editData
+            ?.findNode(nodeId)
+            ?.emptyWidget())
+  })
+
   return {
     actionManager,
     initActionManager,
@@ -191,6 +211,9 @@ export const actionMixin = () => {
     setNodesTransparent,
     setNodesLayoutPadding,
     setNodesLayoutPosition,
-    setNodesLayoutInset
+    setNodesLayoutInset,
+
+    selectWidget,
+    deleteWidget
   }
 }

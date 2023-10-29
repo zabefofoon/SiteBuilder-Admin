@@ -1,8 +1,10 @@
 import {generateUniqueId} from "~/utils/util"
+import {Widget} from "~/models/Widget"
 
 export class Node {
   id = generateUniqueId()
   nodes: Node[] = []
+  widget?: Widget
 
   layout: ResponsiveNodeLayout = {
     small: {
@@ -123,6 +125,14 @@ export class Node {
     }
 
     recursive(nodes)
+  }
+
+  setWidget(widget: Widget) {
+    this.widget = widget
+  }
+
+  emptyWidget() {
+    this.widget = undefined
   }
 
   static makeNode(node: Node) {

@@ -2,7 +2,22 @@
   <div class="node"
        :class="[spacingClass, outlineClass, selectedClass, gridClass, flexClass, layoutClass]"
        @click.stop="clickHandler">
-    <div v-if="node.nodes.length === 0"
+    <div v-if="node.widget"
+         class="text-xs">
+      <WidgetTextEditor v-if="node.widget.widgetCode === 'textEditor'"
+                        :node="node"/>
+      <WidgetPicture v-else-if="node.widget.widgetCode === 'picture'"
+                     :node="node"/>
+      <WidgetVideo v-else-if="node.widget.widgetCode === 'video'"
+                   :node="node"/>
+      <WidgetYoutube v-else-if="node.widget.widgetCode === 'youtube'"
+                     :node="node"/>
+      <WidgetCarousel v-else-if="node.widget.widgetCode === 'carousel'"
+                      :node="node"/>
+      <WidgetImageMap v-else-if="node.widget.widgetCode === 'imageMap'"
+                      :node="node"/>
+    </div>
+    <div v-else-if="node.nodes.length === 0"
          class="text-xs">
       id: {{ node.id }}<br/>
       parent: {{ node.parentId }}<br/>
@@ -16,6 +31,12 @@
 <script setup lang="ts">
 import {Node as NodeClass, ResponsiveMode} from '~/models/Node'
 import {useEditorStore} from "~/stores/editor/editor.store"
+import WidgetTextEditor from "~/components/widgets/WidgetTextEditor.vue"
+import WidgetPicture from "~/components/widgets/WidgetPicture.vue"
+import WidgetVideo from "~/components/widgets/WidgetVideo.vue"
+import WidgetYoutube from "~/components/widgets/WidgetYoutube.vue"
+import WidgetCarousel from "~/components/widgets/WidgetCarousel.vue"
+import WidgetImageMap from "~/components/widgets/WidgetImageMap.vue"
 
 const props = defineProps<{
   node: NodeClass

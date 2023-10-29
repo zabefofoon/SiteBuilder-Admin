@@ -89,7 +89,8 @@
           <span class="text-xs">widget</span>
         </button>
         <div class="border-l"></div>
-        <button class="config-button">
+        <button class="config-button"
+                @click="editorStore.deleteWidget()">
           <i class="icon icon-remove"></i>
           <span class="text-xs">remove</span>
         </button>
