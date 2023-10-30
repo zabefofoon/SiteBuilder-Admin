@@ -37,7 +37,8 @@ watch(() => props.modelValue,
 
 const preventUndo = (event: KeyboardEvent) => {
   const isCtrl = event.ctrlKey || event.metaKey
-  if (isCtrl) (<HTMLElement>event.target)?.blur()
+  if (event.code === 'KeyZ' && isCtrl)
+    (<HTMLElement>event.target)?.blur()
 
 }
 </script>
