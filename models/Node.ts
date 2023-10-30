@@ -131,6 +131,11 @@ export class Node {
     this.widget = widget
   }
 
+  setWidgetData(data: unknown) {
+    if (this.widget)
+      this.widget.data = data
+  }
+
   emptyWidget() {
     this.widget = undefined
   }

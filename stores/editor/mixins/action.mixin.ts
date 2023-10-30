@@ -22,7 +22,7 @@ import {
   SetNodeLayoutPosition,
   SetNodeLayoutTransparent,
   SetNodeLayoutType,
-  SetNodeLayoutWidth
+  SetNodeLayoutWidth, SetWidgetData
 } from "~/models/Action"
 import {
   CrossAxis,
@@ -142,6 +142,8 @@ export const actionMixin = () => {
 
   const deleteWidget = () => actionManager.value?.execute(DeleteWidget.of())
 
+  const setWidgetData = (data: unknown) => actionManager.value?.execute(SetWidgetData.of(data))
+
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))
     newCopiedNodes.forEach((childNode) => {
@@ -200,6 +202,7 @@ export const actionMixin = () => {
     setNodesLayoutInset,
 
     selectWidget,
-    deleteWidget
+    deleteWidget,
+    setWidgetData
   }
 }

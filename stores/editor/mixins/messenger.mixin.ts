@@ -8,8 +8,7 @@ export const messengerMixin = () => {
 
   const postLoadIframeToParent = () => {
     console.log('postLoadIframeToParent')
-    window
-        .parent
+    window.parent
         .postMessage({
           type: 'loadIframe'
         })
@@ -24,8 +23,7 @@ export const messengerMixin = () => {
   }
 
   const postUpdateToParent = () => {
-    window
-        .parent
+    window.parent
         .postMessage({
           type: 'updateToParent'
         })
@@ -36,6 +34,14 @@ export const messengerMixin = () => {
         .postMessage({
           type: 'keydownToParent',
           event: {code, ctrlKey, shiftKey, metaKey}
+        })
+  }
+
+  const postWidgetData = (data: unknown) => {
+    window.parent
+        .postMessage({
+          type: 'updateWidgetData',
+          data
         })
   }
 
@@ -59,6 +65,7 @@ export const messengerMixin = () => {
     postUpdateToChild,
     postUpdateToParent,
     postKeydownEvent,
+    postWidgetData,
 
     toChild,
     toParent

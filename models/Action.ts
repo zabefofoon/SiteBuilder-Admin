@@ -1530,3 +1530,69 @@ export class DeleteWidget implements Action {
     return new DeleteWidget()
   }
 }
+
+export class SetWidgetData implements Action {
+
+  selectedNodeIds?: string[]
+  originalData: {
+    nodeId: string
+    data: unknown
+  }[] = []
+
+  constructor(private readonly data: unknown) {
+  }
+
+
+  do(editorStore: EditorStore): void {
+    this.selectedNodeIds = editorStore.editData?.selectedNodeIds
+
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((selectedNodeId) => {
+            const found = editorStore.editData?.findNode(selectedNodeId)
+
+            this.originalData.push({
+              nodeId: selectedNodeId,
+              data: found?.widget?.data
+            })
+
+            found?.setWidgetData(this.data)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToParent)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((selectedNodeId) => {
+            const found = editorStore.editData?.findNode(selectedNodeId)
+            const foundData = this.originalData.find((originalData) => originalData.nodeId === found?.id)
+            if (foundData) found?.setWidgetData(foundData.data)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToParent)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((selectedNodeId) => {
+            editorStore.editData
+                ?.findNode(selectedNodeId)
+                ?.setWidgetData(this.data)
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToParent()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToParent)
+  }
+
+  static of(data: unknown) {
+    return new SetWidgetData(data)
+  }
+}

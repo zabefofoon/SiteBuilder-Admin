@@ -16,12 +16,12 @@ export class Widget {
 
   constructor(public readonly parentId: string,
               public readonly widgetCode: string,
-              public data?: Record<string, unknown>) {
+              public data?: unknown) {
   }
 
   static of(parentId: string,
             widgetCode: string,
-            data?: Record<string, unknown>) {
+            data?: unknown) {
     return new Widget(parentId, widgetCode, data)
   }
 }

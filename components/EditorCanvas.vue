@@ -30,7 +30,7 @@ const listenShortcut = (event: KeyboardEvent) => {
         ? editorStore.actionManager?.executeRedo()
         : editorStore.actionManager?.executeUndo()
 
-    event.preventDefault()
+    event.preventDefault?.()
   }
 
   editorStore.postUpdateToChild()
@@ -49,6 +49,9 @@ const listenMessage = async (event: MessageEvent) => {
 
   if (event.data.type === 'keydownToParent')
     listenShortcut(event.data.event)
+
+  if (event.data.type === 'updateWidgetData')
+    editorStore.setWidgetData(event.data.data)
 }
 
 onMounted(() => {

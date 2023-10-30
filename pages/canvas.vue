@@ -20,7 +20,13 @@ import UiStyle from "~/components/UiStyle.vue"
 
 const editorStore = useEditorStore()
 
-const listenShortcut = (event: KeyboardEvent) => editorStore.postKeydownEvent(event)
+const listenShortcut = (event: KeyboardEvent) => {
+  const isCtrl = event.ctrlKey || event.metaKey
+  if (event.code === 'KeyZ' && isCtrl)
+    event.preventDefault()
+
+  editorStore.postKeydownEvent(event)
+}
 
 const listenMessage = (event: MessageEvent) => {
   if (event.data.type === 'updateToChild')
