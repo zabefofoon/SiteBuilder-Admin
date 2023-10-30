@@ -9,6 +9,7 @@ import {
   Position,
   ResponsiveMode
 } from "~/models/Node"
+import {Widget} from "~/models/Widget"
 
 export interface Action {
   do: (editorStore: EditorStore) => void,
@@ -1412,5 +1413,120 @@ export class SetNodeLayoutInset implements Action {
 
   static of(direction: Direction, value: string) {
     return new SetNodeLayoutInset(direction, value)
+  }
+}
+
+export class SelectWidget implements Action {
+
+  selectedNodeIds?: string[]
+
+  constructor(private readonly widgetCode: string) {
+  }
+
+  do(editorStore: EditorStore): void {
+    this.selectedNodeIds = editorStore.editData?.selectedNodeIds
+
+    editorStore.toChild(() => {
+      editorStore.editData
+          ?.selectedNodeIds
+          .forEach((nodeId) => editorStore.editData
+              ?.findNode(nodeId)
+              ?.setWidget(Widget.of(nodeId, this.widgetCode)))
+
+      editorStore.showWidgets(false)
+    })
+
+    editorStore.emptySelectedNodeIdsToChild()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToChild)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((nodeId) => editorStore.editData
+              ?.findNode(nodeId)
+              ?.emptyWidget())
+    })
+
+    editorStore.emptySelectedNodeIdsToChild()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToChild)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((nodeId) => editorStore.editData
+              ?.findNode(nodeId)
+              ?.setWidget(Widget.of(nodeId, this.widgetCode)))
+
+      editorStore.showWidgets(false)
+    })
+
+    editorStore.emptySelectedNodeIdsToChild()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToChild)
+  }
+
+  static of(widgetCode: string) {
+    return new SelectWidget(widgetCode)
+  }
+}
+
+export class DeleteWidget implements Action {
+
+  selectedNodeIds?: string[]
+  deletedWidgets: Widget[] = []
+
+  do(editorStore: EditorStore): void {
+    this.selectedNodeIds = editorStore.editData?.selectedNodeIds
+
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((nodeId) => {
+            const found = editorStore.editData?.findNode(nodeId)
+            if (found) {
+              this.deletedWidgets.push(found.widget!)
+              found.emptyWidget()
+            }
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToChild()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToChild)
+  }
+
+  undo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((nodeId) => {
+            const found = editorStore.editData?.findNode(nodeId)
+            if (found) {
+              const widget = this.deletedWidgets.find((deletedWidget) => deletedWidget.parentId === found.id)
+              if (widget) found.setWidget(widget)
+            }
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToChild()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToChild)
+  }
+
+  redo(editorStore: EditorStore): void {
+    editorStore.toChild(() => {
+      this.selectedNodeIds
+          ?.forEach((nodeId) => {
+            const found = editorStore.editData?.findNode(nodeId)
+            if (found) {
+              this.deletedWidgets.push(found.widget!)
+              found.emptyWidget()
+            }
+          })
+    })
+
+    editorStore.emptySelectedNodeIdsToChild()
+    this.selectedNodeIds?.forEach(editorStore.selectNodeIdManyToChild)
+  }
+
+  static of() {
+    return new DeleteWidget()
   }
 }

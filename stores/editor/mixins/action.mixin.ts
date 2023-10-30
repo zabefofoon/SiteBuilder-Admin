@@ -4,11 +4,11 @@ import {
   AddNodeChild,
   AddNodeParent,
   AddNodeSiblingDown,
-  AddNodeSiblingUp,
+  AddNodeSiblingUp, DeleteWidget,
   Paste,
   Remove,
   RemoveParent,
-  SelectResponsiveMode,
+  SelectResponsiveMode, SelectWidget,
   SetNodeLayoutColumn,
   SetNodeLayoutCrossAxis,
   SetNodeLayoutDirection,
@@ -138,6 +138,10 @@ export const actionMixin = () => {
   const setNodesLayoutInset = (direction: Direction,
                                value: string) => actionManager.value?.execute(SetNodeLayoutInset.of(direction, prepend(value)))
 
+  const selectWidget = (widgetCode: string) => actionManager.value?.execute(SelectWidget.of(widgetCode))
+
+  const deleteWidget = () => actionManager.value?.execute(DeleteWidget.of())
+
   const regenerateNodes = (nodes: Node[]) => {
     const newCopiedNodes = Node.makeNodes(structuredClone(toRaw(nodes)))
     newCopiedNodes.forEach((childNode) => {
@@ -150,25 +154,6 @@ export const actionMixin = () => {
     })
     return newCopiedNodes
   }
-
-
-  const selectWidget = (widgetCode: string) => editorStore.toChild(() => {
-    editorStore.editData
-        ?.selectedNodeIds
-        .forEach((nodeId) => editorStore.editData
-            ?.findNode(nodeId)
-            ?.setWidget(Widget.of(nodeId, widgetCode)))
-
-    editorStore.showWidgets(false)
-  })
-
-  const deleteWidget = () => editorStore.toChild(() => {
-    editorStore.editData
-        ?.selectedNodeIds
-        .forEach((nodeId) => editorStore.editData
-            ?.findNode(nodeId)
-            ?.emptyWidget())
-  })
 
   return {
     actionManager,
@@ -185,6 +170,7 @@ export const actionMixin = () => {
     addNodeParentToChild,
 
     emptySelectedNodeIdsToParent,
+    emptySelectedNodeIdsToChild,
 
     copiedNodes,
     copy,
