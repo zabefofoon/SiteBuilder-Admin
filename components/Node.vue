@@ -4,7 +4,8 @@
        @click.stop="clickHandler">
     <div v-if="node.widget"
          class="widget-container | text-xs">
-      <WidgetTextEditorMenu v-if="editorStore.isShowTiptapMenu === node.id"/>
+      <WidgetTextEditorMenu v-if="editorStore.isShowTiptapMenu === node.id"
+                            :node="node"/>
       <WidgetTextEditor v-if="node.widget.widgetCode === 'textEditor'"
                         :node="node"/>
       <WidgetPicture v-else-if="node.widget.widgetCode === 'picture'"

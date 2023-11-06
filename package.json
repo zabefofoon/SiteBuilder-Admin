@@ -29,6 +29,7 @@
     "axios": "^1.5.1",
     "short-unique-id": "^5.0.3",
     "store2": "^2.14.2",
+    "tiptap-extension-font-size": "^1.2.0",
     "vue3-click-away": "^1.2.4"
   }
 }

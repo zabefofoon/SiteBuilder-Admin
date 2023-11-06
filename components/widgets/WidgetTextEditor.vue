@@ -20,25 +20,17 @@ const defaultText = `<p>Lorem Ipsum is simply dummy text of the printing and typ
 const content = ref(props.node.widget?.data || defaultText)
 const setContent = (data: string) => content.value = data
 
-const originalHtml = ref('')
-const setOriginalHtml = (value: string) => originalHtml.value = value
-const setWidgetData = (value: string) => {
-  const isSame = toValue(originalHtml) === value
-  if (!isSame) editorStore.postWidgetData(value)
-}
-
 const focusHandler = (value: string,
                       tiptapEditor?: Editor) => {
   editorStore.setTiptapEditor(tiptapEditor)
   editorStore.showTiptapMenu(props.node.id)
-  setOriginalHtml(value)
+  editorStore.setOriginalHtml(value)
 }
 
 const blurHandler = (value: string,
                      tiptapEditor?: Editor) => {
-  editorStore.setTiptapEditor(tiptapEditor)
-  editorStore.showTiptapMenu()
-  setWidgetData(value)
+  editorStore.tiptapEditor?.commands.setCustomSelection()
+  editorStore.setTextWidgetData(tiptapEditor?.getHTML() || '')
 }
 
 watch(() => props.node.widget?.data,

@@ -2,19 +2,19 @@ import {Mark, markInputRule, markPasteRule, mergeAttributes,} from '@tiptap/core
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
-    customSpan: {
+    customSelection: {
       /**
        * Set an italic mark
        */
-      setCustomSpan: () => ReturnType,
+      setCustomSelection: () => ReturnType,
       /**
        * Toggle an italic mark
        */
-      toggleCustomSpan: () => ReturnType,
+      toggleCustomSelection: () => ReturnType,
       /**
        * Unset an italic mark
        */
-      unsetCustomSpan: () => ReturnType,
+      unsetCustomSelection: () => ReturnType,
     }
   }
 }
@@ -24,8 +24,8 @@ export const starPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g
 export const underscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/
 export const underscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g
 
-export const CustomSpan = Mark.create({
-  name: 'customSpan',
+export const CustomSelection = Mark.create({
+  name: 'customSelection',
 
   addOptions() {
     return {
@@ -33,30 +33,22 @@ export const CustomSpan = Mark.create({
     }
   },
 
-  parseHTML() {
-    return [
-      {
-        style: 'color=red',
-      },
-    ]
-  },
-
   renderHTML({HTMLAttributes}) {
     return ['span', mergeAttributes(this.options.HTMLAttributes, {
       ...HTMLAttributes,
-      style: `color: red;`
+      class: 'focused',
     }), 0]
   },
 
   addCommands() {
     return {
-      setCustomSpan: () => ({commands}) => {
+      setCustomSelection: () => ({commands}) => {
         return commands.setMark(this.name)
       },
-      toggleCustomSpan: () => ({commands}) => {
+      toggleCustomSelection: () => ({commands}) => {
         return commands.toggleMark(this.name)
       },
-      unsetCustomSpan: () => ({commands}) => {
+      unsetCustomSelection: () => ({commands}) => {
         return commands.unsetMark(this.name)
       },
     }

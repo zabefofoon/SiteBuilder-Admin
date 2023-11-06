@@ -206,3 +206,22 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+
+.icon-bold {
+  $src: 'https://api.iconify.design/mdi/format-bold.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-italic {
+  $src: 'https://api.iconify.design/mdi/format-italic.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
+
+.icon-strike {
+  $src: 'https://api.iconify.design/mdi/format-strikethrough.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}

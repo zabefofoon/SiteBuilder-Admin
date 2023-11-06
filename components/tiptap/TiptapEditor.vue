@@ -8,8 +8,10 @@
 import {EditorContent, useEditor} from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import {watch} from "#imports"
-import {CustomSpan} from "~/components/tiptap/CustomSpan"
+import {CustomSelection} from "~/components/tiptap/CustomSelection"
 import {Editor} from "@tiptap/core"
+import {FontSize} from "tiptap-extension-font-size"
+import TextStyle from "@tiptap/extension-text-style"
 
 const props = defineProps<{
   modelValue: string
@@ -25,10 +27,12 @@ const editor = useEditor({
   content: props.modelValue,
   extensions: [
     StarterKit,
-    CustomSpan,
+    CustomSelection,
+    FontSize,
+    TextStyle
   ],
   onUpdate: () => emit('update:modelValue', toValue(editor)?.getHTML() || ''),
-  onBlur: () => setTimeout(() => emit('blur', toValue(editor)?.getHTML() || '', editor.value), 200),
+  onBlur: () => emit('blur', toValue(editor)?.getHTML() || '', editor.value),
   onFocus: () => emit('focus', toValue(editor)?.getHTML() || '', editor.value)
 })
 
@@ -43,13 +47,14 @@ const preventUndo = (event: KeyboardEvent) => {
   if (event.code === 'KeyZ' && isCtrl)
     (<HTMLElement>event.target)?.blur()
 }
-
-/*
-const setCustomSpan = () => toValue(editor)?.commands.setCustomSpan()
-const unsetCustomSpan = () => toValue(editor)?.commands.unsetCustomSpan()
-*/
 </script>
 
 <style scoped lang="scss">
 
+::v-deep(.PromiseMirror-focused) {
+  background: dodgerblue;
+}
+::v-deep(.focused) {
+  background: #ccc;
+}
 </style>
