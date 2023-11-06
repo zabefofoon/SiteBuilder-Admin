@@ -3,7 +3,8 @@
        :class="[spacingClass, outlineClass, selectedClass, gridClass, flexClass, layoutClass]"
        @click.stop="clickHandler">
     <div v-if="node.widget"
-         class="text-xs">
+         class="widget-container | text-xs">
+      <WidgetTextEditorMenu v-if="editorStore.isShowTiptapMenu === node.id"/>
       <WidgetTextEditor v-if="node.widget.widgetCode === 'textEditor'"
                         :node="node"/>
       <WidgetPicture v-else-if="node.widget.widgetCode === 'picture'"
@@ -37,6 +38,7 @@ import WidgetVideo from "~/components/widgets/WidgetVideo.vue"
 import WidgetYoutube from "~/components/widgets/WidgetYoutube.vue"
 import WidgetCarousel from "~/components/widgets/WidgetCarousel.vue"
 import WidgetImageMap from "~/components/widgets/WidgetImageMap.vue"
+import WidgetTextEditorMenu from "~/components/widgets/WidgetTextEditorMenu.vue"
 
 const props = defineProps<{
   node: NodeClass

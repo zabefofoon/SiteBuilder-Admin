@@ -42,16 +42,17 @@ const isConfig = computed(() => route.query.selectedTab === 'config'
 const isEditor = computed(() => route.query.selectedTab === 'editor')
 
 const loadPage = async () => {
-    page.value = {
-      id: 0,
-      name: 'name',
-      url: '/',
-      authorized: false,
-      dynamic: false,
-      lock: false,
-      activate: false
-    }
- // page.value = await pageApi.getPage(Number(route.params.id))
+  page.value = {
+    id: 0,
+    name: 'name',
+    url: '/',
+    authorized: false,
+    dynamic: false,
+    lock: false,
+    activate: false
+  }
+  /*const result = await pageApi.getPage(Number(route.params.id))
+  if (result) page.value = <Page>result*/
 }
 
 loadPage()

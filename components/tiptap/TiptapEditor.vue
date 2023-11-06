@@ -8,6 +8,8 @@
 import {EditorContent, useEditor} from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import {watch} from "#imports"
+import {CustomSpan} from "~/components/tiptap/CustomSpan"
+import {Editor} from "@tiptap/core"
 
 const props = defineProps<{
   modelValue: string
@@ -15,18 +17,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
-  (e: 'blur', value: string): void
-  (e: 'focus', value: string): void
+  (e: 'blur', value: string, editor?: Editor): void
+  (e: 'focus', value: string, editor?: Editor): void
 }>()
 
 const editor = useEditor({
   content: props.modelValue,
   extensions: [
     StarterKit,
+    CustomSpan,
   ],
   onUpdate: () => emit('update:modelValue', toValue(editor)?.getHTML() || ''),
-  onBlur: () => emit('blur', toValue(editor)?.getHTML() || ''),
-  onFocus: () => emit('focus', toValue(editor)?.getHTML() || '')
+  onBlur: () => setTimeout(() => emit('blur', toValue(editor)?.getHTML() || '', editor.value), 200),
+  onFocus: () => emit('focus', toValue(editor)?.getHTML() || '', editor.value)
 })
 
 watch(() => props.modelValue,
@@ -39,8 +42,12 @@ const preventUndo = (event: KeyboardEvent) => {
   const isCtrl = event.ctrlKey || event.metaKey
   if (event.code === 'KeyZ' && isCtrl)
     (<HTMLElement>event.target)?.blur()
-
 }
+
+/*
+const setCustomSpan = () => toValue(editor)?.commands.setCustomSpan()
+const unsetCustomSpan = () => toValue(editor)?.commands.unsetCustomSpan()
+*/
 </script>
 
 <style scoped lang="scss">

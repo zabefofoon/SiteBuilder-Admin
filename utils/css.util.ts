@@ -263,6 +263,10 @@ const generateCoreCss = (isShowHidden: boolean) => {
   align-items: start;
 }
 
+.node .widget-container {
+  position: relative;
+}
+
 .node > * {
   width: 100%;
 }

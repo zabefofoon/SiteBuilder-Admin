@@ -138,6 +138,7 @@ export class Node {
 
   emptyWidget() {
     this.widget = undefined
+    return this
   }
 
   static makeNode(node: Node) {
