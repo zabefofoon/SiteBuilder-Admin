@@ -45,6 +45,15 @@ export const messengerMixin = () => {
         })
   }
 
+  const postRequestShowModal = (modalName: string, param: unknown) => {
+    window.parent
+        .postMessage({
+          type: 'requestShowModal',
+          modalName,
+          param
+        })
+  }
+
   const toChild = (cb: () => void) => {
     cb()
     editorStore.storeEditData()
@@ -68,6 +77,8 @@ export const messengerMixin = () => {
     postWidgetData,
 
     toChild,
-    toParent
+    toParent,
+
+    postRequestShowModal
   }
 }

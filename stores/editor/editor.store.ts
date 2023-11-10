@@ -4,6 +4,7 @@ import {actionMixin} from "~/stores/editor/mixins/action.mixin"
 import {screenMixin} from "~/stores/editor/mixins/screen.mixin"
 import {widgetMixin} from "~/stores/editor/mixins/widget.mixin"
 import {tiptapMixin} from "~/stores/editor/mixins/tiptap.mixin"
+import {modalMixin} from "~/stores/editor/mixins/modal.mixin"
 
 export const useEditorStore = defineStore('editor', () => {
   return {
@@ -12,7 +13,8 @@ export const useEditorStore = defineStore('editor', () => {
     ...actionMixin(),
     ...screenMixin(),
     ...widgetMixin(),
-    ...tiptapMixin()
+    ...tiptapMixin(),
+    ...modalMixin(),
   }
 })
 

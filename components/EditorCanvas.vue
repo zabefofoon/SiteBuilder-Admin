@@ -52,6 +52,9 @@ const listenMessage = async (event: MessageEvent) => {
 
   if (event.data.type === 'updateWidgetData')
     editorStore.setWidgetData(event.data.data)
+
+  if (event.data.type === 'requestShowModal')
+    editorStore.showModal(event.data.modalName, event.data.param)
 }
 
 onMounted(() => {

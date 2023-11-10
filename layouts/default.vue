@@ -9,8 +9,10 @@
     <footer class="flex items-center | px-4 | h-8 | border text-xs">v0.0.0</footer>
     <Aside/>
   </div>
+  <ModalsContainer />
 </template>
 <script setup lang="ts">
+import { ModalsContainer } from 'vue-final-modal'
 
 import Aside from "~/components/Aside.vue"
 </script>

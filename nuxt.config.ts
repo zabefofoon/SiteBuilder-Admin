@@ -2,7 +2,8 @@
 export default {
   // devtools: { enabled: true },
   css: [
-    '~/assets/style/basic.scss'
+    '~/assets/style/basic.scss',
+    'vue-final-modal/style.css'
   ],
   runtimeConfig: {
     SUPABASE_URL: process.env.SUPABASE_URL,

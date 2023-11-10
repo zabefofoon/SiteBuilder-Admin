@@ -30,6 +30,7 @@
     "short-unique-id": "^5.0.3",
     "store2": "^2.14.2",
     "tiptap-extension-font-size": "^1.2.0",
+    "vue-final-modal": "^4.4.6",
     "vue3-click-away": "^1.2.4"
   }
 }
