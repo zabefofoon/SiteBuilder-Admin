@@ -225,3 +225,9 @@
   -webkit-mask-image: url($src);
   mask-image: url($src);
 }
+
+.icon-drag-drop {
+  $src: 'https://api.iconify.design/tabler/drag-drop.svg';
+  -webkit-mask-image: url($src);
+  mask-image: url($src);
+}
